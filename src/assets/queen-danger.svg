@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="threatened queen icon">
+  <defs>
+    <linearGradient id="body" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffb2b2"/>
+      <stop offset="100%" stop-color="#df4747"/>
+    </linearGradient>
+    <linearGradient id="shine" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffd4d4" stop-opacity=".65"/>
+      <stop offset="100%" stop-color="#ffd4d4" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <g fill="none" stroke="#8f1f1f" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="18" cy="11.6" r="2.9" fill="url(#body)"/>
+    <circle cx="28" cy="9.1" r="2.9" fill="url(#body)"/>
+    <circle cx="36" cy="9.1" r="2.9" fill="url(#body)"/>
+    <circle cx="46" cy="11.6" r="2.9" fill="url(#body)"/>
+
+    <path d="M16 15.5l5.8 21h20.4l5.8-21-7.7 7.1L32 11.8l-8.3 10.8z" fill="url(#body)"/>
+    <path d="M21.8 36.5h20.4l2.3 7.2H19.5z" fill="url(#body)"/>
+    <rect x="18.5" y="44.2" width="27" height="6.2" rx="2.2" fill="url(#body)"/>
+    <rect x="16" y="51.4" width="32" height="7.6" rx="2.4" fill="url(#body)"/>
+    <path d="M24 23.5c2.2 2.3 13.8 2.3 16 0" opacity=".4"/>
+  </g>
+
+  <path d="M22.5 18.2l2.8 10.4h13.4l2.8-10.4-5 4.3L32 14.9l-4.5 7.6z" fill="url(#shine)"/>
+</svg>

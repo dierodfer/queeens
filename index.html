@@ -3,35 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Juego de Reinas en Ajedrez</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Queens Game</title>
+    <link rel="stylesheet" href="src/styles.css">
 </head>
 <body>
-    <div id="controls">
-        <button id="menu-button">Niveles</button>
-        <div id="size-menu" class="hidden">
-            <button class="size-btn" data-size="4">4x4</button>
-            <button class="size-btn" data-size="5">5x5</button>
-            <button class="size-btn" data-size="6">6x6</button>
-            <button class="size-btn" data-size="7">7x7</button>
-            <button class="size-btn" data-size="8">8x8</button>
-            <button class="size-btn" data-size="9">9x9</button>
-            <button class="size-btn" data-size="10">10x10</button>
-        </div>
+    <div id="top-controls">
+        <button id="menu-btn">Niveles</button>
+        <button id="shuffle-btn" disabled>Cambiar tablero</button>
     </div>
+    <p id="timer" aria-live="polite">Tiempo: 00:00</p>
+    <p id="app-version" aria-live="polite">Version: --</p>
     <div id="board"></div>
-
-    <!-- Popup de Ganador -->
-    <div id="winner-popup" class="hidden">
-        <div id="winner-message">
+    <section id="ranking" aria-live="polite" aria-label="Ranking local del tablero actual" hidden>
+        <h3>Ranking local</h3>
+        <p id="ranking-board"></p>
+        <ol id="ranking-list"></ol>
+    </section>
+    <div id="overlay" class="overlay"></div>
+    <div id="menu" class="popup">
+        <button data-size="4">4×4</button>
+        <button data-size="5">5×5</button>
+        <button data-size="6">6×6</button>
+        <button data-size="7">7×7</button>
+        <button data-size="8">8×8</button>
+        <button data-size="9">9×9</button>
+        <button data-size="10">10×10</button>
+        <button id="close-menu" class="close-menu-btn" type="button">Cerrar</button>
+    </div>
+    <div id="win" class="popup">
+        <div>
             <h2>¡Felicidades!</h2>
             <p>¡Has colocado todas las reinas!</p>
+            <p id="win-time"></p>
+            <button id="retry-board">Reintentar tablero</button>
+            <button id="next-board">Siguiente tablero</button>
         </div>
     </div>
-
-    <!-- Fondo de overlay detrás del popup -->
-    <div id="popup-overlay"></div>
-
-    <script type="module" src="script.js"></script>
+    <script type="module" src="src/script.js"></script>
 </body>
 </html>
