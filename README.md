@@ -4,6 +4,10 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.9.3-3178C6?logo=typescript&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-8.0.1-646CFF?logo=vite&logoColor=white)
 
+## ▶️ Acceso a la aplicación web
+
+[¡Juega ahora en GitHub Pages!](https://dierodfer.github.io/queeens/)
+
 Fast, clean, and a little chaotic.
 Queeens is a logic puzzle game built with where you place one queen per region without conflicts, based on 8 queens problem.
 
