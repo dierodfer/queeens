@@ -1,0 +1,33 @@
+{
+  "name": "queeens",
+  "version": "1.0.0",
+  "description": "Juego de reinas (N x N) en HTML/CSS/JS para GitHub Pages.",
+  "type": "module",
+  "scripts": {
+    "start": "vite",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dierodfer/queens.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dierodfer/queens/issues"
+  },
+  "homepage": "https://github.com/dierodfer/queens#readme",
+  "dependencies": {
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
+    "typescript": "^5.9.3",
+    "vite": "^8.0.1"
+  }
+}

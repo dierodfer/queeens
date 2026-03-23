@@ -1,44 +1,12 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Queens Game</title>
-    <link rel="stylesheet" href="src/styles.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Queeens Game</title>
 </head>
 <body>
-    <div id="top-controls">
-        <button id="menu-btn">Niveles</button>
-        <button id="shuffle-btn" disabled>Cambiar tablero</button>
-    </div>
-    <p id="timer" aria-live="polite">Tiempo: 00:00</p>
-    <p id="app-version" aria-live="polite">Version: --</p>
-    <div id="board"></div>
-    <section id="ranking" aria-live="polite" aria-label="Ranking local del tablero actual" hidden>
-        <h3>Ranking local</h3>
-        <p id="ranking-board"></p>
-        <ol id="ranking-list"></ol>
-    </section>
-    <div id="overlay" class="overlay"></div>
-    <div id="menu" class="popup">
-        <button data-size="4">4×4</button>
-        <button data-size="5">5×5</button>
-        <button data-size="6">6×6</button>
-        <button data-size="7">7×7</button>
-        <button data-size="8">8×8</button>
-        <button data-size="9">9×9</button>
-        <button data-size="10">10×10</button>
-        <button id="close-menu" class="close-menu-btn" type="button">Cerrar</button>
-    </div>
-    <div id="win" class="popup">
-        <div>
-            <h2>¡Felicidades!</h2>
-            <p>¡Has colocado todas las reinas!</p>
-            <p id="win-time"></p>
-            <button id="retry-board">Reintentar tablero</button>
-            <button id="next-board">Siguiente tablero</button>
-        </div>
-    </div>
-    <script type="module" src="src/script.js"></script>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
 </body>
 </html>

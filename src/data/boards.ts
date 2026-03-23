@@ -1,36 +1,41 @@
-const seedBoards = {
+type Board2D = number[][];
+type Coord = [number, number];
+
+const seedBoards: Record<number, Board2D[]> = {
   4: [],
   5: [],
   6: [],
   7: [],
   8: [],
   9: [],
-  10: []
+  10: [],
+  12: [],
+  14: [],
 };
 
-const rotate90 = b => {
+const rotate90 = (b: Board2D): Board2D => {
   const n = b.length;
   return Array.from({ length: n }, (_, y) =>
-    Array.from({ length: n }, (_, x) => b[n - 1 - x][y])
+    Array.from({ length: n }, (_, x) => b[n - 1 - x][y]),
   );
 };
 
-const mirrorX = b => b.map(r => [...r].reverse());
-const boardKey = b => b.map(r => r.join(',')).join(';');
+const mirrorX = (b: Board2D): Board2D => b.map((r) => [...r].reverse());
+const boardKey = (b: Board2D): string => b.map((r) => r.join(',')).join(';');
 
-function variants(base) {
-  const out = [];
+function variants(base: Board2D): Board2D[] {
+  const out: Board2D[] = [];
   let cur = base;
   for (let i = 0; i < 4; i++) {
     out.push(cur, mirrorX(cur));
     cur = rotate90(cur);
   }
-  const uniq = new Map();
-  out.forEach(b => uniq.set(boardKey(b), b));
+  const uniq = new Map<string, Board2D>();
+  out.forEach((b) => uniq.set(boardKey(b), b));
   return [...uniq.values()];
 }
 
-function mulberry32(seed) {
+function mulberry32(seed: number): () => number {
   let t = seed >>> 0;
   return () => {
     t += 0x6d2b79f5;
@@ -40,13 +45,13 @@ function mulberry32(seed) {
   };
 }
 
-function findQueenPermutation(n) {
+function findQueenPermutation(n: number): number[] {
   const cols = Array(n).fill(false);
   const d1 = Array(2 * n).fill(false);
   const d2 = Array(2 * n).fill(false);
   const perm = Array(n).fill(-1);
 
-  function bt(row) {
+  function bt(row: number): boolean {
     if (row === n) return true;
     for (let col = 0; col < n; col++) {
       const a = row + col;
@@ -64,14 +69,14 @@ function findQueenPermutation(n) {
   return perm;
 }
 
-const queenCache = new Map();
-const getQueenPermutation = n => {
+const queenCache = new Map<number, number[]>();
+const getQueenPermutation = (n: number): number[] => {
   if (!queenCache.has(n)) queenCache.set(n, findQueenPermutation(n));
-  return queenCache.get(n);
+  return queenCache.get(n)!;
 };
 
-function neighbors4(x, y, n) {
-  const out = [];
+function neighbors4(x: number, y: number, n: number): Coord[] {
+  const out: Coord[] = [];
   if (x > 0) out.push([x - 1, y]);
   if (x < n - 1) out.push([x + 1, y]);
   if (y > 0) out.push([x, y - 1]);
@@ -79,11 +84,11 @@ function neighbors4(x, y, n) {
   return out;
 }
 
-function generateContiguousBoard(n, seed) {
+function generateContiguousBoard(n: number, seed: number): Board2D {
   const rand = mulberry32(seed);
   const queens = getQueenPermutation(n);
   const board = Array.from({ length: n }, () => Array(n).fill(-1));
-  const frontier = [];
+  const frontier: Array<[number, number, number]> = [];
 
   for (let r = 0; r < n; r++) {
     const qx = queens[r];
@@ -115,7 +120,7 @@ function generateContiguousBoard(n, seed) {
         if (board[y][x] !== -1) continue;
         const neigh = neighbors4(x, y, n)
           .map(([nx, ny]) => board[ny][nx])
-          .filter(v => v !== -1);
+          .filter((v) => v !== -1);
         board[y][x] = neigh.length ? neigh[Math.floor(rand() * neigh.length)] : 0;
       }
     }
@@ -124,9 +129,9 @@ function generateContiguousBoard(n, seed) {
   return board;
 }
 
-function generateRealBoards(n, count) {
-  const out = [];
-  const uniq = new Set();
+function generateRealBoards(n: number, count: number): Board2D[] {
+  const out: Board2D[] = [];
+  const uniq = new Set<string>();
 
   for (let i = 0; out.length < count && i < 200; i++) {
     const b = generateContiguousBoard(n, n * 10007 + i * 7919);
@@ -140,24 +145,28 @@ function generateRealBoards(n, count) {
   return out;
 }
 
-const proceduralPerSize = {
+const proceduralPerSize: Record<number, number> = {
   4: 6,
   5: 6,
   6: 6,
   7: 6,
   8: 6,
   9: 6,
-  10: 6
+  10: 6,
+  12: 6,
+  14: 6,
 };
 
-export const tableros = Object.fromEntries(
-  Object.keys(seedBoards).map(sizeKey => {
+const generatedBoards = Object.fromEntries(
+  Object.keys(seedBoards).map((sizeKey) => {
     const size = Number(sizeKey);
     const fromSeeds = seedBoards[size].flatMap(variants);
     const generated = generateRealBoards(size, proceduralPerSize[size]);
 
-    const uniq = new Map();
-    [...fromSeeds, ...generated].forEach(b => uniq.set(boardKey(b), b));
+    const uniq = new Map<string, Board2D>();
+    [...fromSeeds, ...generated].forEach((b) => uniq.set(boardKey(b), b));
     return [size, [...uniq.values()]];
-  })
-);
+  }),
+) as Record<number, Board2D[]>;
+
+export const tableros = generatedBoards;
