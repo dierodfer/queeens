@@ -579,9 +579,22 @@ export default function Queeens() {
       {size && size > 0 && (
         <div
           id="board"
-          className={won ? 'disabled' : ''}
+          className={
+            won
+              ? 'disabled' + (size >= 10 ? ' small-cells' : '')
+              : size >= 14
+              ? 'smallest-cells'
+              : size >= 10
+              ? 'small-cells'
+              : ''
+          }
           style={{
-            gridTemplateColumns: `repeat(${size}, 50px)`,
+            gridTemplateColumns:
+              size >= 14
+                ? `repeat(${size}, 28px)`
+                : size >= 10
+                ? `repeat(${size}, 36px)`
+                : `repeat(${size}, 50px)`,
             animation: rotationFx
               ? rotationFx.direction === 'right'
                 ? `boardSpinRight ${ROTATION_ANIM_MS}ms cubic-bezier(.22,.86,.24,1)`
