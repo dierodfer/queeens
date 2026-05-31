@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { tableros } from '../data/boards';
 import { I18N, type BlindLevel, type GameMode, type Lang } from '../i18n';
+import { SKINS, type SkinId } from './skins';
 import queeensImage from '../assets/queeens-image.png';
 
 type CellState = 0 | 1 | 2;
@@ -9,13 +10,6 @@ type RankingStore = Record<string, RankingEntry[]>;
 type RotationDirection = 'left' | 'right';
 type PendingRotation = { direction: RotationDirection; runId: number } | null;
 type BlindConfig = { baseSeconds: number; stepSeconds: number; replaySeconds: number };
-
-const COLORS = [
-  '#77DD77', '#AEC6CF', '#F6D7A7', '#FFB7B2', '#B39EB5',
-  '#FF6961', '#FFD1DC', '#CFCFC4', '#C1E1C1', '#F7CAC9',
-  '#F4A259', '#7BC8A4', '#89A7FF', '#D7A9E3', '#F0E68C',
-  '#9AD1D4',
-];
 const EMPTY: CellState = 0;
 const QUEEN: CellState = 1;
 const MARK: CellState = 2;
@@ -230,6 +224,7 @@ function pickBoard(n: number): number[] {
 
 export default function Queeens() {
   const LEVEL_OPTIONS = [4, 5, 6, 7, 8, 10, 12, 14];
+  const [skinId, setSkinId] = useState<SkinId>('default');
   const [lang, setLang] = useState<Lang>('en');
   const [size, setSize] = useState<number | null>(null);
   const [board, setBoard] = useState<number[]>([]);
@@ -543,6 +538,20 @@ export default function Queeens() {
     setLastPlacedQueen(null);
   };
 
+  const activeSkin = SKINS.find((s) => s.id === skinId) ?? SKINS[0];
+  const COLORS = activeSkin.boardColors;
+
+  useEffect(() => {
+    document.body.dataset.skin = skinId;
+  }, [skinId]);
+
+  const cycleSkin = useCallback(() => {
+    setSkinId((prev) => {
+      const idx = SKINS.findIndex((s) => s.id === prev);
+      return SKINS[(idx + 1) % SKINS.length].id;
+    });
+  }, []);
+
   const overlay = showMenu || showWin || showExitConfirm;
   const blindPreviewRemainingMs = blindPreviewUntil ? Math.max(0, blindPreviewUntil - Date.now()) : 0;
   void blindTick;
@@ -562,6 +571,9 @@ export default function Queeens() {
         </button>
         <button id="shuffle-btn" disabled={!size} onClick={() => size && startGame(size)}>
           {tr('newBoard')}
+        </button>
+        <button id="skin-btn" onClick={cycleSkin} title={activeSkin.label}>
+          {activeSkin.emoji}
         </button>
       </div>
 
