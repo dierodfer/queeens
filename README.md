@@ -9,7 +9,7 @@
 [¡Juega ahora en GitHub Pages!](https://dierodfer.github.io/queeens/)
 
 Fast, clean, and a little chaotic.
-Queeens is a logic puzzle game built with where you place one queen per region without conflicts, based on 8 queens problem.
+Queeens is a logic puzzle game built with React, TypeScript and Vite, where you place one queen per region without conflicts, based on the 8 queens problem.
 
 ## Game Rules ♟️
 
@@ -41,9 +41,13 @@ npm start
 Other useful commands:
 
 ```bash
-npm run dev
-npm run build
-npm run preview
+npm run dev          # start the dev server
+npm run build        # production build
+npm run preview      # preview the production build
+npm run typecheck    # TypeScript type checking
+npm run lint         # ESLint
+npm run format       # format with Prettier
+npm test             # run the unit tests (Vitest)
 ```
 
 ## Project Structure 📁
@@ -58,8 +62,11 @@ npm run preview
 │   └── version.yml
 ├── src/
 │   ├── app/
+│   │   ├── components/        # presentational components (Board, Menu, ...)
+│   │   ├── hooks/             # reusable hooks (useTimer)
+│   │   ├── constants.ts       # board sizes, colors, animation timing
 │   │   ├── Queeens.css
-│   │   └── Queeens.tsx
+│   │   └── Queeens.tsx        # stateful game orchestration
 │   ├── assets/
 │   │   ├── queeens-image.png
 │   │   ├── queen-danger.svg
@@ -71,9 +78,18 @@ npm run preview
 │   │   └── locales/
 │   │       ├── en.ts
 │   │       └── es.ts
+│   ├── lib/                   # pure game logic + unit tests
+│   │   ├── blind.ts
+│   │   ├── boardPicker.ts
+│   │   ├── format.ts
+│   │   ├── game.ts
+│   │   └── ranking.ts
 │   ├── main.tsx
 │   └── types/
 │       └── i18n.ts
+├── eslint.config.js
+├── .prettierrc.json
 ├── tsconfig.json
-└── vite.config.ts
+├── vite.config.ts
+└── vitest.config.ts
 ```

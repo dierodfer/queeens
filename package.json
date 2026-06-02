@@ -1,33 +1,56 @@
 {
   "name": "queeens",
   "version": "1.0.0",
-  "description": "Juego de reinas (N x N) en HTML/CSS/JS para GitHub Pages.",
+  "description": "Queeens: an N x N queens logic puzzle built with React, TypeScript and Vite, deployed to GitHub Pages.",
   "type": "module",
   "scripts": {
     "start": "vite",
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dierodfer/queens.git"
+    "url": "git+https://github.com/dierodfer/queeens.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "queens",
+    "puzzle",
+    "game",
+    "react",
+    "typescript",
+    "vite"
+  ],
+  "author": "dierodfer",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/dierodfer/queens/issues"
+    "url": "https://github.com/dierodfer/queeens/issues"
   },
-  "homepage": "https://github.com/dierodfer/queens#readme",
+  "homepage": "https://github.com/dierodfer/queeens#readme",
   "dependencies": {
     "react": "^19.2.4",
     "react-dom": "^19.2.4"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.4",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
+    "eslint": "^9.39.4",
+    "eslint-config-prettier": "^9.1.2",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.26",
+    "globals": "^17.6.0",
+    "jsdom": "^25.0.1",
+    "prettier": "^3.8.3",
     "typescript": "^5.9.3",
-    "vite": "^8.0.1"
+    "typescript-eslint": "^8.60.1",
+    "vite": "^8.0.1",
+    "vitest": "^3.2.6"
   }
 }
