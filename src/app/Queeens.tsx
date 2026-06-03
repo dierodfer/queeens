@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { I18N, type BlindLevel, type GameMode, type Lang } from '../i18n';
 import {
   EMPTY,
@@ -7,7 +7,6 @@ import {
   getAttacked,
   getAttackedByOneQueen,
   getConflicts,
-  oppositeDirection,
   rotateFlat,
   type CellState,
   type RotationDirection,
@@ -21,16 +20,15 @@ import {
 } from '../lib/ranking';
 import { getBlindPreviewMs, getBlindReplayMs } from '../lib/blind';
 import { pickBoard } from '../lib/boardPicker';
-import { ROTATION_ANIM_MS, ROTATION_SWAP_MS, TORNADO_BIAS } from './constants';
 import { useTimer } from './hooks/useTimer';
+import { useBlindPreview } from './hooks/useBlindPreview';
+import { useTwisterRotation } from './hooks/useTwisterRotation';
 import { Board } from './components/Board';
 import { ExitConfirm } from './components/ExitConfirm';
 import { Menu } from './components/Menu';
 import { Ranking } from './components/Ranking';
 import { TopBar } from './components/TopBar';
 import { WinPopup } from './components/WinPopup';
-
-type PendingRotation = { direction: RotationDirection; runId: number } | null;
 
 export default function Queeens() {
   const [lang, setLang] = useState<Lang>('en');
@@ -47,22 +45,36 @@ export default function Queeens() {
   const [lastPlacedQueen, setLastPlacedQueen] = useState<number | null>(null);
   const [mode, setMode] = useState<GameMode | null>('classic');
   const [blindLevel, setBlindLevel] = useState<BlindLevel | null>(null);
-  const [blindPreviewUntil, setBlindPreviewUntil] = useState<number | null>(null);
-  const [blindPreviewActive, setBlindPreviewActive] = useState(false);
-  const [favoredRotation, setFavoredRotation] = useState<RotationDirection>('right');
   const [marksSinceRotation, setMarksSinceRotation] = useState(0);
   const [lastAddTimestamp, setLastAddTimestamp] = useState<number>(Date.now());
-  const [rotationFx, setRotationFx] = useState<PendingRotation>(null);
-  const [blindTick, setBlindTick] = useState(0);
-
-  const rotationRunRef = useRef(0);
-  const rotationSwapTimerRef = useRef<number | null>(null);
-  const rotationEndTimerRef = useRef<number | null>(null);
-  const blindPreviewTimerRef = useRef<number | null>(null);
-  const blindTickRef = useRef<number | null>(null);
-  const clearQueensOnBlindPreviewEndRef = useRef(false);
 
   const { elapsed, setElapsed, start: startTimer, stop: stopTimer, since } = useTimer();
+
+  const clearQueens = useCallback(() => {
+    setCells((prev) => prev.map((cell) => (cell === QUEEN ? EMPTY : cell)) as CellState[]);
+    setLastPlacedQueen(null);
+    setLastAddTimestamp(Date.now());
+  }, []);
+  const blind = useBlindPreview(clearQueens);
+
+  const handleRotate = useCallback(
+    (direction: RotationDirection) => {
+      if (!size) return;
+      setBoard((prev) => rotateFlat(prev, size, direction));
+      setCells((prev) => rotateFlat(prev, size, direction));
+      setLastPlacedQueen(null);
+      setMarksSinceRotation(0);
+      setLastAddTimestamp(Date.now());
+    },
+    [size],
+  );
+  const rotation = useTwisterRotation({
+    enabled: mode === 'twister' && size != null,
+    paused: won || showMenu || showWin,
+    lastAddTimestamp,
+    marksSinceRotation,
+    onRotate: handleRotate,
+  });
 
   useEffect(() => {
     fetch(`${import.meta.env.BASE_URL}version.yml`, { cache: 'no-store' })
@@ -71,133 +83,39 @@ export default function Queeens() {
       .catch(() => {});
   }, []);
 
-  useEffect(
-    () => () => {
-      if (rotationSwapTimerRef.current !== null) window.clearTimeout(rotationSwapTimerRef.current);
-      if (rotationEndTimerRef.current !== null) window.clearTimeout(rotationEndTimerRef.current);
-      if (blindPreviewTimerRef.current !== null) window.clearTimeout(blindPreviewTimerRef.current);
-      if (blindTickRef.current !== null) window.clearInterval(blindTickRef.current);
-    },
-    [],
-  );
-
-  const stopBlindPreview = useCallback(() => {
-    const shouldClearQueens = blindPreviewActive && clearQueensOnBlindPreviewEndRef.current;
-    clearQueensOnBlindPreviewEndRef.current = false;
-    if (blindPreviewTimerRef.current !== null) window.clearTimeout(blindPreviewTimerRef.current);
-    if (blindTickRef.current !== null) window.clearInterval(blindTickRef.current);
-    setBlindPreviewActive(false);
-    setBlindPreviewUntil(null);
-    if (shouldClearQueens) {
-      setCells((prev) => prev.map((cell) => (cell === QUEEN ? EMPTY : cell)) as CellState[]);
+  const beginRound = useCallback(
+    (n: number) => {
+      setCells(new Array(n * n).fill(EMPTY));
+      setWon(false);
+      setShowWin(false);
       setLastPlacedQueen(null);
+      setMarksSinceRotation(0);
       setLastAddTimestamp(Date.now());
-    }
-  }, [blindPreviewActive]);
-
-  const beginBlindPreview = useCallback(
-    (ms: number) => {
-      stopBlindPreview();
-      setBlindPreviewActive(true);
-      setBlindPreviewUntil(Date.now() + ms);
-      blindTickRef.current = window.setInterval(() => setBlindTick((v) => v + 1), 250);
-      blindPreviewTimerRef.current = window.setTimeout(() => {
-        stopBlindPreview();
-      }, ms);
+      rotation.reset();
+      if (mode === 'blind' && blindLevel) blind.begin(getBlindPreviewMs(blindLevel, n));
+      startTimer();
     },
-    [stopBlindPreview],
+    [mode, blindLevel, blind, rotation, startTimer],
   );
 
   const startGame = useCallback(
     (n: number) => {
-      clearQueensOnBlindPreviewEndRef.current = false;
-      const b = pickBoard(n);
-      const sig = b.join(',');
+      const flat = pickBoard(n);
+      const sig = flat.join(',');
       setSize(n);
-      setBoard(b);
-      setCells(new Array(n * n).fill(EMPTY));
-      setWon(false);
+      setBoard(flat);
       setShowMenu(false);
-      setShowWin(false);
       setShowExitConfirm(false);
-      setLastPlacedQueen(null);
-      setMarksSinceRotation(0);
-      setLastAddTimestamp(Date.now());
-      setRotationFx(null);
-      stopBlindPreview();
-      if (rotationSwapTimerRef.current !== null) window.clearTimeout(rotationSwapTimerRef.current);
-      if (rotationEndTimerRef.current !== null) window.clearTimeout(rotationEndTimerRef.current);
-      setFavoredRotation(Math.random() < 0.5 ? 'right' : 'left');
       setBoardKey(`${n}|${sig}`);
       setBoardLabel(`${n}x${n} - ${shortHash(sig)}`);
-
-      if (mode === 'blind' && blindLevel) {
-        beginBlindPreview(getBlindPreviewMs(blindLevel, n));
-      }
-
-      startTimer();
+      beginRound(n);
     },
-    [startTimer, mode, blindLevel, beginBlindPreview, stopBlindPreview],
+    [beginRound],
   );
 
   const startRound = useCallback(() => {
-    if (!size || !board.length) return;
-    clearQueensOnBlindPreviewEndRef.current = false;
-    setCells(new Array(size * size).fill(EMPTY));
-    setWon(false);
-    setShowWin(false);
-    setLastPlacedQueen(null);
-    setMarksSinceRotation(0);
-    setLastAddTimestamp(Date.now());
-    setRotationFx(null);
-    stopBlindPreview();
-    if (rotationSwapTimerRef.current !== null) window.clearTimeout(rotationSwapTimerRef.current);
-    if (rotationEndTimerRef.current !== null) window.clearTimeout(rotationEndTimerRef.current);
-    setFavoredRotation(Math.random() < 0.5 ? 'right' : 'left');
-
-    if (mode === 'blind' && blindLevel) {
-      beginBlindPreview(getBlindPreviewMs(blindLevel, size));
-    }
-
-    startTimer();
-  }, [size, board, startTimer, mode, blindLevel, beginBlindPreview, stopBlindPreview]);
-
-  const triggerRotation = useCallback(() => {
-    if (mode !== 'twister' || !size || rotationFx) return;
-    const direction: RotationDirection =
-      Math.random() < TORNADO_BIAS ? favoredRotation : oppositeDirection(favoredRotation);
-    const runId = rotationRunRef.current + 1;
-    rotationRunRef.current = runId;
-
-    if (rotationSwapTimerRef.current !== null) window.clearTimeout(rotationSwapTimerRef.current);
-    if (rotationEndTimerRef.current !== null) window.clearTimeout(rotationEndTimerRef.current);
-
-    setRotationFx({ direction, runId });
-    rotationSwapTimerRef.current = window.setTimeout(() => {
-      setBoard((prev) => rotateFlat(prev, size, direction));
-      setCells((prev) => rotateFlat(prev, size, direction));
-      setLastPlacedQueen(null);
-      setMarksSinceRotation(0);
-      setLastAddTimestamp(Date.now());
-    }, ROTATION_SWAP_MS);
-
-    rotationEndTimerRef.current = window.setTimeout(() => {
-      setRotationFx((current) => (current && current.runId === runId ? null : current));
-    }, ROTATION_ANIM_MS);
-  }, [mode, size, rotationFx, favoredRotation]);
-
-  useEffect(() => {
-    if (mode !== 'twister' || !size || won || showMenu || showWin) return;
-    const timer = window.setInterval(() => {
-      if (Date.now() - lastAddTimestamp >= 30000) triggerRotation();
-    }, 500);
-    return () => window.clearInterval(timer);
-  }, [mode, size, won, showMenu, showWin, lastAddTimestamp, triggerRotation]);
-
-  useEffect(() => {
-    if (mode !== 'twister' || !size || marksSinceRotation < 5) return;
-    triggerRotation();
-  }, [mode, size, marksSinceRotation, triggerRotation]);
+    if (size && board.length) beginRound(size);
+  }, [size, board, beginRound]);
 
   useEffect(() => {
     if (!size || won) return;
@@ -235,8 +153,7 @@ export default function Queeens() {
       if (!alreadyAttacked.has(ci) && cells[ci] !== QUEEN) {
         const cx = ci % size;
         const cy = (ci / size) | 0;
-        const d = Math.max(Math.abs(cx - qx), Math.abs(cy - qy));
-        result.set(ci, d);
+        result.set(ci, Math.max(Math.abs(cx - qx), Math.abs(cy - qy)));
       }
     });
     return result;
@@ -245,7 +162,6 @@ export default function Queeens() {
   const sealedRegions = useMemo(() => {
     if (!size) return new Set<number>();
     const regions = new Map<number, number[]>();
-
     board.forEach((region, index) => {
       const bucket = regions.get(region);
       if (bucket) bucket.push(index);
@@ -255,25 +171,19 @@ export default function Queeens() {
     const sealed = new Set<number>();
     regions.forEach((indices, region) => {
       const hasQueen = indices.some((index) => cells[index] === QUEEN);
-      if (hasQueen) return;
-
-      const fullyClosedByCrosses = indices.every(
-        (index) => cells[index] === MARK || attacked.has(index),
-      );
-      if (fullyClosedByCrosses) sealed.add(region);
+      const closed = indices.every((index) => cells[index] === MARK || attacked.has(index));
+      if (!hasQueen && closed) sealed.add(region);
     });
-
     return sealed;
   }, [size, board, cells, attacked]);
 
   const rankingEntries = boardKey ? getRankingEntries(loadRankingStore(), boardKey) : [];
-
   const queenCount = cells.reduce<number>((count, cell) => count + (cell === QUEEN ? 1 : 0), 0);
 
   const resetToMenu = useCallback(() => {
-    clearQueensOnBlindPreviewEndRef.current = false;
     stopTimer();
-    stopBlindPreview();
+    blind.stop();
+    rotation.reset();
     setShowWin(false);
     setShowExitConfirm(false);
     setWon(false);
@@ -284,67 +194,56 @@ export default function Queeens() {
     setBoardLabel('');
     setLastPlacedQueen(null);
     setShowMenu(true);
-  }, [stopTimer, stopBlindPreview]);
+  }, [stopTimer, blind, rotation]);
 
   const goToMenu = useCallback(() => {
-    if (size) {
-      setShowExitConfirm(true);
-      return;
-    }
-    resetToMenu();
+    if (size) setShowExitConfirm(true);
+    else resetToMenu();
   }, [size, resetToMenu]);
 
   const replayBlindPreview = useCallback(() => {
-    if (mode !== 'blind' || !blindLevel || !size) return;
-    clearQueensOnBlindPreviewEndRef.current = true;
-    beginBlindPreview(getBlindReplayMs(blindLevel));
-  }, [mode, blindLevel, size, beginBlindPreview]);
+    if (mode === 'blind' && blindLevel && size) blind.begin(getBlindReplayMs(blindLevel), true);
+  }, [mode, blindLevel, size, blind]);
+
+  const setCellAt = useCallback((i: number, value: CellState) => {
+    setCells((prev) => {
+      const next = [...prev];
+      next[i] = next[i] === value ? EMPTY : value;
+      return next;
+    });
+  }, []);
 
   const placeQueen = useCallback(
-    (i: number): void => {
-      if (won) return;
-      if (blindPreviewActive) return;
+    (i: number) => {
+      if (won || blind.active) return;
       if (cells[i] !== QUEEN && attacked.has(i)) return;
       const placing = cells[i] !== QUEEN;
-      setCells((prev) => {
-        const next = [...prev];
-        next[i] = next[i] === QUEEN ? EMPTY : QUEEN;
-        return next;
-      });
+      setCellAt(i, QUEEN);
       if (placing) {
         setLastAddTimestamp(Date.now());
-        if (mode === 'twister') triggerRotation();
+        if (mode === 'twister') rotation.trigger();
       }
       setLastPlacedQueen(placing ? i : null);
     },
-    [won, blindPreviewActive, cells, attacked, mode, triggerRotation],
+    [won, blind, cells, attacked, mode, rotation, setCellAt],
   );
 
   const toggleMark = useCallback(
-    (i: number): void => {
-      if (blindPreviewActive) return;
-      if (won || cells[i] === QUEEN) return;
-      const addingMark = cells[i] !== MARK;
-      setCells((prev) => {
-        const next = [...prev];
-        next[i] = next[i] === MARK ? EMPTY : MARK;
-        return next;
-      });
-      if (addingMark) {
+    (i: number) => {
+      if (blind.active || won || cells[i] === QUEEN) return;
+      const adding = cells[i] !== MARK;
+      setCellAt(i, MARK);
+      if (adding) {
         setLastAddTimestamp(Date.now());
         setMarksSinceRotation((prev) => prev + 1);
       }
       setLastPlacedQueen(null);
     },
-    [blindPreviewActive, won, cells],
+    [blind, won, cells, setCellAt],
   );
 
   const overlay = showMenu || showWin || showExitConfirm;
-  const blindPreviewRemainingMs = blindPreviewUntil
-    ? Math.max(0, blindPreviewUntil - Date.now())
-    : 0;
-  void blindTick;
-  const showBlindColors = mode !== 'blind' || blindPreviewActive;
+  const showBlindColors = mode !== 'blind' || blind.active;
   const locale = I18N[lang];
   const tr = useCallback((key: string): string => locale[key] ?? key, [locale]);
 
@@ -356,11 +255,11 @@ export default function Queeens() {
         elapsed={elapsed}
         queenCount={queenCount}
         version={version}
-        blindPreviewActive={blindPreviewActive}
-        blindPreviewRemainingMs={blindPreviewRemainingMs}
+        blindPreviewActive={blind.active}
+        blindPreviewRemainingMs={blind.remainingMs}
         onMenu={goToMenu}
         onNewBoard={() => size && startGame(size)}
-        onSkipBlind={stopBlindPreview}
+        onSkipBlind={blind.stop}
         tr={tr}
       />
 
@@ -377,14 +276,14 @@ export default function Queeens() {
           mode={mode}
           showBlindColors={showBlindColors}
           won={won}
-          rotationFx={rotationFx}
+          rotationFx={rotation.rotationFx}
           onCellClick={placeQueen}
           onCellMark={toggleMark}
           tr={tr}
         />
       )}
 
-      {mode === 'blind' && size && !blindPreviewActive && (
+      {mode === 'blind' && size && !blind.active && (
         <div id="blind-actions">
           <button id="blind-reveal-btn" onClick={replayBlindPreview}>
             {tr('showAgain')}
