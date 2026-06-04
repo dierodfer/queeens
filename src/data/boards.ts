@@ -15,9 +15,7 @@ const seedBoards: Record<number, Board2D[]> = {
 
 const rotate90 = (b: Board2D): Board2D => {
   const n = b.length;
-  return Array.from({ length: n }, (_, y) =>
-    Array.from({ length: n }, (_, x) => b[n - 1 - x][y]),
-  );
+  return Array.from({ length: n }, (_, y) => Array.from({ length: n }, (_, x) => b[n - 1 - x][y]));
 };
 
 const mirrorX = (b: Board2D): Board2D => b.map((r) => [...r].reverse());

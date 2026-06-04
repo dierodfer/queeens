@@ -9,7 +9,7 @@
 [¡Juega ahora en GitHub Pages!](https://dierodfer.github.io/queeens/)
 
 Fast, clean, and a little chaotic.
-Queeens is a logic puzzle game built with where you place one queen per region without conflicts, based on 8 queens problem.
+Queeens is a logic puzzle game built with React, TypeScript and Vite, where you place one queen per region without conflicts, based on the 8 queens problem.
 
 ## Game Rules ♟️
 
@@ -41,9 +41,13 @@ npm start
 Other useful commands:
 
 ```bash
-npm run dev
-npm run build
-npm run preview
+npm run dev          # start the dev server
+npm run build        # production build
+npm run preview      # preview the production build
+npm run typecheck    # TypeScript type checking
+npm run lint         # ESLint
+npm run format       # format with Prettier
+npm test             # run the unit tests (Vitest)
 ```
 
 ## Project Structure 📁
@@ -58,8 +62,22 @@ npm run preview
 │   └── version.yml
 ├── src/
 │   ├── app/
+│   │   ├── components/        # presentational components
+│   │   │   ├── Board.tsx
+│   │   │   ├── Cell.tsx
+│   │   │   ├── ExitConfirm.tsx
+│   │   │   ├── Menu.tsx
+│   │   │   ├── Ranking.tsx
+│   │   │   ├── TopBar.tsx
+│   │   │   ├── WinPopup.tsx
+│   │   │   └── types.ts
+│   │   ├── hooks/             # stateful behavior
+│   │   │   ├── useBlindPreview.ts
+│   │   │   ├── useTimer.ts
+│   │   │   └── useTwisterRotation.ts
+│   │   ├── constants.ts       # board sizes, colors, animation timing
 │   │   ├── Queeens.css
-│   │   └── Queeens.tsx
+│   │   └── Queeens.tsx        # game state orchestration
 │   ├── assets/
 │   │   ├── queeens-image.png
 │   │   ├── queen-danger.svg
@@ -71,9 +89,43 @@ npm run preview
 │   │   └── locales/
 │   │       ├── en.ts
 │   │       └── es.ts
+│   ├── lib/                   # pure game logic + unit tests
+│   │   ├── blind.ts
+│   │   ├── boardPicker.ts
+│   │   ├── format.ts
+│   │   ├── game.ts
+│   │   └── ranking.ts
 │   ├── main.tsx
 │   └── types/
 │       └── i18n.ts
+├── eslint.config.js
+├── .prettierrc.json
 ├── tsconfig.json
-└── vite.config.ts
+├── vite.config.ts
+└── vitest.config.ts
+```
+
+## Architecture 🧩
+
+The code is organized in layers so each piece stays small and focused:
+
+- **`src/lib/`** — pure, framework-agnostic game logic (conflict/attack
+  detection, board rotation, ranking, time formatting, blind timing). No React,
+  fully unit-tested.
+- **`src/app/hooks/`** — stateful behavior isolated from rendering: `useTimer`
+  (stopwatch), `useBlindPreview` (memorize countdown) and `useTwisterRotation`
+  (board rotation triggers and timers).
+- **`src/app/components/`** — presentational components that only render props.
+- **`src/app/Queeens.tsx`** — orchestrates state and wires the hooks and
+  components together.
+
+## Testing 🧪
+
+Unit tests run with [Vitest](https://vitest.dev/) and cover the pure logic in
+`src/lib/` (conflict/attack detection, rotation, ranking storage, formatting and
+blind timing).
+
+```bash
+npm test          # run once
+npm run test:watch # watch mode
 ```
