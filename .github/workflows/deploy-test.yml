@@ -33,10 +33,32 @@ jobs:
           npm run build
           cp dist/index.html dist/404.html
 
-      - name: Deploy to gh-pages/queeens-test
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
-          destination_dir: queeens-test
-          keep_files: true
+      - name: Publish to gh-pages/queeens-test (preserving production root)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          mkdir publish && cd publish
+          git init -q
+          git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          if git ls-remote --exit-code --heads origin gh-pages >/dev/null 2>&1; then
+            git fetch -q origin gh-pages
+            git checkout -q -b gh-pages FETCH_HEAD
+          else
+            git checkout -q --orphan gh-pages
+          fi
+
+          # Replace only the queeens-test/ directory, leave everything else untouched
+          rm -rf queeens-test
+          mkdir queeens-test
+          cp -r ../dist/. queeens-test/
+
+          git add -A
+          if git diff --staged --quiet; then
+            echo "No changes to publish."
+          else
+            git commit -q -m "Deploy /queeens/queeens-test/ from ${GITHUB_REF_NAME} (${GITHUB_SHA::7})"
+            git push -q origin gh-pages
+          fi

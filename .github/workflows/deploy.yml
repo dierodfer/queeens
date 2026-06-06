@@ -33,13 +33,32 @@ jobs:
           npm run build
           cp dist/index.html dist/404.html
 
-      - name: Preserve queeens-test from gh-pages
+      - name: Publish to gh-pages (root, preserving queeens-test/)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git fetch origin gh-pages 2>/dev/null && \
-            git archive origin/gh-pages -- queeens-test 2>/dev/null | tar -x -C dist/ || true
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Deploy to gh-pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
+          mkdir publish && cd publish
+          git init -q
+          git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          if git ls-remote --exit-code --heads origin gh-pages >/dev/null 2>&1; then
+            git fetch -q origin gh-pages
+            git checkout -q -b gh-pages FETCH_HEAD
+          else
+            git checkout -q --orphan gh-pages
+          fi
+
+          # Replace production (root) files, keep the queeens-test/ subsite intact
+          find . -mindepth 1 -maxdepth 1 ! -name '.git' ! -name 'queeens-test' -exec rm -rf {} +
+          cp -r ../dist/. .
+          touch .nojekyll
+
+          git add -A
+          if git diff --staged --quiet; then
+            echo "No changes to publish."
+          else
+            git commit -q -m "Deploy /queeens/ (${GITHUB_SHA::7})"
+            git push -q origin gh-pages
+          fi
