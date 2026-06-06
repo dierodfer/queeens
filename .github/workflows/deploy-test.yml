@@ -2,11 +2,6 @@ name: Deploy Test to GitHub Pages
 
 on:
   workflow_dispatch:
-    inputs:
-      branch:
-        description: 'Branch to preview (e.g. feature/my-branch)'
-        required: true
-        type: string
 
 permissions:
   contents: read
@@ -24,10 +19,8 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout branch to preview
+      - name: Checkout
         uses: actions/checkout@v6
-        with:
-          ref: ${{ inputs.branch }}
 
       - name: Set up Node
         uses: actions/setup-node@v6
