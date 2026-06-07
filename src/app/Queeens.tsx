@@ -20,7 +20,7 @@ import {
   saveRankingStore,
 } from '../lib/ranking';
 import { getBlindPreviewMs, getBlindReplayMs } from '../lib/blind';
-import { getBoardCount, pickBoard } from '../lib/boardPicker';
+import { pickBoard } from '../lib/boardPicker';
 import { useTimer } from './hooks/useTimer';
 import { useBlindPreview } from './hooks/useBlindPreview';
 import { useTwisterRotation } from './hooks/useTwisterRotation';
@@ -43,6 +43,7 @@ export default function Queeens() {
   const [showExitConfirm, setShowExitConfirm] = useState(false);
   const [boardKey, setBoardKey] = useState('');
   const [boardLabel, setBoardLabel] = useState('');
+  const [boardOrdinal, setBoardOrdinal] = useState<{ index: number; total: number } | null>(null);
   const [version, setVersion] = useState('--');
   const [lastPlacedQueen, setLastPlacedQueen] = useState<number | null>(null);
   const [mode, setMode] = useState<GameMode | null>('classic');
@@ -102,7 +103,7 @@ export default function Queeens() {
 
   const startGame = useCallback(
     (n: number) => {
-      const flat = pickBoard(n);
+      const { board: flat, index, total } = pickBoard(n);
       const sig = flat.join(',');
       setSize(n);
       setBoard(flat);
@@ -110,6 +111,7 @@ export default function Queeens() {
       setShowExitConfirm(false);
       setBoardKey(`${n}|${sig}`);
       setBoardLabel(`${n}x${n} - ${shortHash(sig)}`);
+      setBoardOrdinal({ index, total });
       beginRound(n);
     },
     [beginRound],
@@ -269,7 +271,7 @@ export default function Queeens() {
         mode={mode}
         elapsed={elapsed}
         queenCount={queenCount}
-        boardCount={size ? getBoardCount(size) : 0}
+        boardOrdinal={boardOrdinal}
         version={version}
         blindPreviewActive={blind.active}
         blindPreviewRemainingMs={blind.remainingMs}

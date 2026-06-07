@@ -22,7 +22,6 @@ export const esLocale: LocaleDict = {
   tookTime: 'Has tardado',
   retryBoard: 'Reintentar tablero',
   nextBoard: 'Siguiente tablero',
-  boardsAvailable: 'Tableros disponibles',
   confirmExitTitle: 'Salir de la partida actual?',
   confirmExit: 'Volver al menu terminara la partida actual. Continuar?',
   cancel: 'Cancelar',

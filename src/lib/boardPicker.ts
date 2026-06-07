@@ -1,19 +1,16 @@
 import { tableros } from '../data/boards';
 
-let lastBoard: number[][] | null = null;
+export type PickedBoard = { board: number[]; index: number; total: number };
 
-/** Total number of distinct boards available for size `n` (fixed, doesn't depend on picks). */
-export function getBoardCount(n: number): number {
-  return tableros[n]?.length ?? 0;
-}
+let lastIndex = -1;
 
 /** Picks a random flattened board for size `n`, avoiding the previous pick when possible. */
-export function pickBoard(n: number): number[] {
+export function pickBoard(n: number): PickedBoard {
   const opts = tableros[n];
-  let b: number[][];
+  let index: number;
   do {
-    b = opts[(Math.random() * opts.length) | 0];
-  } while (opts.length > 1 && b === lastBoard);
-  lastBoard = b;
-  return b.flat();
+    index = (Math.random() * opts.length) | 0;
+  } while (opts.length > 1 && index === lastIndex);
+  lastIndex = index;
+  return { board: opts[index].flat(), index, total: opts.length };
 }

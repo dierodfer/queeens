@@ -9,7 +9,7 @@ type TopBarProps = {
   mode: GameMode | null;
   elapsed: number;
   queenCount: number;
-  boardCount: number;
+  boardOrdinal: { index: number; total: number } | null;
   version: string;
   blindPreviewActive: boolean;
   blindPreviewRemainingMs: number;
@@ -27,7 +27,7 @@ export function TopBar({
   mode,
   elapsed,
   queenCount,
-  boardCount,
+  boardOrdinal,
   version,
   blindPreviewActive,
   blindPreviewRemainingMs,
@@ -77,9 +77,9 @@ export function TopBar({
       <p id="queen-counter">
         {tr('queens')}: {queenCount}/{size ?? 0}
       </p>
-      {size != null && size > 0 && (
+      {boardOrdinal && (
         <p id="board-counter">
-          {tr('boardsAvailable')}: {boardCount}
+          {tr('board')}: {boardOrdinal.index + 1}/{boardOrdinal.total}
         </p>
       )}
       <p id="app-version">
