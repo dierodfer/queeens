@@ -4,9 +4,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
   group: 'pages'
@@ -14,9 +12,6 @@ concurrency:
 
 jobs:
   deploy-test:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -32,18 +27,37 @@ jobs:
         run: npm ci
 
       - name: Build
+        env:
+          VITE_BASE_PATH: /queeens/queeens-test/
         run: |
           npm run build
           cp dist/index.html dist/404.html
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v6
+      - name: Publish to gh-pages/queeens-test (preserving production root)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v5
-        with:
-          path: './dist'
+          mkdir publish && cd publish
+          git init -q
+          git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          if git ls-remote --exit-code --heads origin gh-pages >/dev/null 2>&1; then
+            git fetch -q origin gh-pages
+            git checkout -q -b gh-pages FETCH_HEAD
+          else
+            git checkout -q --orphan gh-pages
+          fi
 
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v5
+          rm -rf queeens-test
+          mkdir queeens-test
+          cp -r ../dist/. queeens-test/
+
+          git add -A
+          if git diff --staged --quiet; then
+            echo "No changes to publish."
+          else
+            git commit -q -m "Deploy /queeens/queeens-test/ from ${GITHUB_REF_NAME} (${GITHUB_SHA::7})"
+            git push -q origin gh-pages
+          fi
