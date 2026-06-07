@@ -4,8 +4,6 @@ export type SkinId =
   | 'farm'
   | 'aquarium'
   | 'arctic'
-  | 'synthwave'
-  | 'roman'
   | 'circus';
 
 /**
@@ -25,13 +23,10 @@ export type PatternId =
   | 'honeycomb'
   | 'waves'
   | 'bubbles'
-  | 'crystals'
   | 'cracks'
   | 'feathers'
   | 'tiles'
   | 'confetti'
-  | 'grid-glow'
-  | 'scanlines'
   | 'fur';
 
 export interface SkinRegion {
@@ -170,60 +165,6 @@ const ARCTIC_COLORS = [
   '#D9E7E2', '#C2D9D0', '#A6C9BC', '#EFEAE3',
 ];
 
-/** 🌆 Neón retro — synthwave grid glow on a midnight skyline. */
-const SYNTHWAVE_REGIONS = regions([
-  { animal: '🐺', pattern: 'grid-glow', p1: '#2ef0ff' },
-  { animal: '🦅', pattern: 'scanlines', p1: '#ff2e9a' },
-  { animal: '🦂', pattern: 'grid-glow', p1: '#b347ff' },
-  { animal: '🐍', pattern: 'scales', p1: '#39ff8a' },
-  { animal: '🦇', pattern: 'scanlines', p1: '#ff6a2e' },
-  { animal: '🦉', pattern: 'grid-glow', p1: '#fff84e' },
-  { animal: '🐯', pattern: 'stripes-bold', p1: '#ff2e9a' },
-  { animal: '🦈', pattern: 'scanlines', p1: '#2ef0ff' },
-  { animal: '🐉', pattern: 'grid-glow', p1: '#ff4e4e' },
-  { animal: '🦄', pattern: 'bubbles', p1: '#d66bff' },
-  { animal: '🦊', pattern: 'scanlines', p1: '#ff8c2e' },
-  { animal: '🐙', pattern: 'grid-glow', p1: '#39ffd6' },
-  { animal: '🦋', pattern: 'confetti', p1: '#ff2e9a', p2: '#2ef0ff' },
-  { animal: '🐆', pattern: 'grid-glow', p1: '#b347ff' },
-  { animal: '🦁', pattern: 'stripes-a', p1: '#fff84e' },
-  { animal: '🦖', pattern: 'scanlines', p1: '#39ff8a' },
-]);
-
-const SYNTHWAVE_COLORS = [
-  '#1a1033', '#241640', '#2e1c4d', '#150a28',
-  '#1c2640', '#10202e', '#2a1030', '#1a2a2e',
-  '#241420', '#101830', '#2a1c1a', '#1c1030',
-  '#142030', '#241830', '#1a1424', '#1c1c2e',
-];
-
-/** 🏛️ Romano — terracotta, marble and antique mosaics. */
-const ROMAN_REGIONS = regions([
-  { animal: '🦅', pattern: 'tiles', p1: '#5c3a20', p2: '#caa05a' },
-  { animal: '🐺', pattern: 'tiles', p1: '#3a3a3a', p2: '#caa05a' },
-  { animal: '🐎', pattern: 'scales', p1: '#7a5a30' },
-  { animal: '🦁', pattern: 'rosettes', p1: '#5c3a18' },
-  { animal: '🐗', pattern: 'fur', p1: 'rgba(60,40,20,.3)' },
-  { animal: '🐬', pattern: 'waves', p1: '#2d5c54' },
-  { animal: '🦚', pattern: 'feathers', p1: '#2d5c80' },
-  { animal: '🦉', pattern: 'spots-md', p1: '#5c4a30' },
-  { animal: '🐂', pattern: 'cracks', p1: 'rgba(60,40,20,.3)' },
-  { animal: '🐍', pattern: 'scales', p1: '#3a5c3a' },
-  { animal: '🦢', pattern: 'bubbles', p1: '#fbf6ec' },
-  { animal: '🐐', pattern: 'stripes-b', p1: '#6b5a40' },
-  { animal: '🦌', pattern: 'spots-sm', p1: '#5c4632' },
-  { animal: '🐘', pattern: 'cracks', p1: 'rgba(50,50,50,.26)' },
-  { animal: '🐓', pattern: 'confetti', p1: '#a33b3b', p2: '#caa05a' },
-  { animal: '🦂', pattern: 'tiles', p1: '#5a3a3a', p2: '#caa05a' },
-]);
-
-const ROMAN_COLORS = [
-  '#E8DCC8', '#C9B190', '#B5602F', '#9C4A24',
-  '#CAA05A', '#8C7048', '#5C7A6E', '#2D5C54',
-  '#A33B3B', '#7A6A8C', '#D8C4A0', '#9A8568',
-  '#6E8C7A', '#B08C5C', '#8C4A3A', '#D6BFA0',
-];
-
 /** 🎪 Circo — big top stripes and confetti under canvas. */
 const CIRCUS_REGIONS = regions([
   { animal: '🦁', pattern: 'rosettes', p1: '#7a4a1a' },
@@ -268,8 +209,6 @@ export const SKINS: Skin[] = [
   { id: 'farm', label: 'Granja', emoji: '🐄', patterned: true, regions: FARM_REGIONS, boardColors: FARM_COLORS },
   { id: 'aquarium', label: 'Acuario', emoji: '🐠', patterned: true, regions: AQUARIUM_REGIONS, boardColors: AQUARIUM_COLORS },
   { id: 'arctic', label: 'Ártico', emoji: '🐧', patterned: true, regions: ARCTIC_REGIONS, boardColors: ARCTIC_COLORS },
-  { id: 'synthwave', label: 'Neón retro', emoji: '🦄', patterned: true, regions: SYNTHWAVE_REGIONS, boardColors: SYNTHWAVE_COLORS },
-  { id: 'roman', label: 'Romano', emoji: '🦅', patterned: true, regions: ROMAN_REGIONS, boardColors: ROMAN_COLORS },
   { id: 'circus', label: 'Circo', emoji: '🎪', patterned: true, regions: CIRCUS_REGIONS, boardColors: CIRCUS_COLORS },
 ];
 

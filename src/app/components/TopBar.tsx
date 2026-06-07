@@ -59,7 +59,8 @@ export function TopBar({
         {tr('time')}: {fmtClock(elapsed)}
       </p>
       <p id="mode-label">
-        {tr('mode')}: {mode ? tr(MODE_LABEL_KEYS[mode]) : tr('noMode')}
+        {tr('mode')}: {mode ? tr(MODE_LABEL_KEYS[mode]) : tr('noMode')} · {tr('skin')}:{' '}
+        {skinEmoji} {skinLabel}
       </p>
       {mode === 'blind' && blindPreviewActive && (
         <div id="blind-preview-wrap">

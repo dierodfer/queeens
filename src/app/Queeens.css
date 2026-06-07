@@ -248,104 +248,6 @@ body[data-skin="arctic"] {
   --skin-btn-hover: rgba(232,242,250,.92);
 }
 
-/* ── Synthwave skin ─────────────────────────────────────────────────── */
-body[data-skin="synthwave"] {
-  --body-bg:
-    radial-gradient(1200px 700px at 15% -10%, #3a1257 0%, rgba(58,18,87,0) 60%),
-    radial-gradient(1000px 700px at 100% 110%, #1a0b3a 0%, rgba(26,11,58,0) 55%),
-    linear-gradient(160deg, #190a2e 0%, #0c0518 100%);
-  --primary: #ff2e9a;
-  --primary-dark: #c71f78;
-  --primary-gradient: linear-gradient(160deg, #ff4fae 0%, #c71f78 100%);
-  --primary-gradient-hover: linear-gradient(160deg, #ee459f 0%, #b81c6f 100%);
-  --primary-active: linear-gradient(160deg, #ff6dbe 0%, #d6308a 100%);
-  --primary-active-border: #a3185f;
-  --primary-active-shadow: rgba(255,46,154,.4);
-  --secondary: #2ef0ff;
-  --secondary-dark: #1cb9c9;
-  --secondary-disabled: #6c7a9c;
-  --accent: #b347ff;
-  --accent-dark: #8c33cc;
-  --success: #4ef0a0;
-  --success-dark: #2fbf7c;
-  --neutral: #8a7ab0;
-  --neutral-dark: #6c5e90;
-  --board-surface: rgba(40,18,70,.5);
-  --board-shadow: 0 10px 30px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,90,200,.18);
-  --surface: rgba(40,20,66,.78);
-  --surface-solid: #2a1648;
-  --surface-border: rgba(255,90,200,.25);
-  --surface-alt: rgba(54,28,90,.8);
-  --surface-alt-border: rgba(120,90,200,.25);
-  --btn-inactive: #2c1850;
-  --btn-inactive-hover: #3a2266;
-  --btn-inactive-border: rgba(255,90,200,.28);
-  --btn-inactive-text: #d9c8ff;
-  --text-main: #e9defe;
-  --text-sub: #c7b6ee;
-  --text-accent: #ff8fc8;
-  --text-bold: #ffffff;
-  --text-dim: #a796cf;
-  --text-rules: #c7b6ee;
-  --text-blind-hint: #9d8cc4;
-  --overlay: rgba(8,4,20,.65);
-  --version-bg: rgba(40,20,66,.72);
-  --version-border: rgba(255,90,200,.28);
-  --skin-btn-bg: rgba(54,28,90,.65);
-  --skin-btn-border: rgba(255,90,200,.3);
-  --skin-btn-text: #e9defe;
-  --skin-btn-hover: rgba(74,40,120,.85);
-}
-
-/* ── Roman skin ─────────────────────────────────────────────────────── */
-body[data-skin="roman"] {
-  --body-bg:
-    radial-gradient(1200px 700px at 10% -10%, #f7ecd9 0%, rgba(247,236,217,0) 60%),
-    radial-gradient(1000px 600px at 100% 110%, #c9a86f 0%, rgba(201,168,111,0) 55%),
-    linear-gradient(160deg, #ecdfc4 0%, #cdb78e 100%);
-  --primary: #af5a3a;
-  --primary-dark: #87432a;
-  --primary-gradient: linear-gradient(160deg, #c06a46 0%, #974d2f 100%);
-  --primary-gradient-hover: linear-gradient(160deg, #b1623d 0%, #8a4729 100%);
-  --primary-active: linear-gradient(160deg, #d07e54 0%, #b1623d 100%);
-  --primary-active-border: #87432a;
-  --primary-active-shadow: rgba(140,75,40,.36);
-  --secondary: #c9a227;
-  --secondary-dark: #a3811d;
-  --secondary-disabled: #e3d49d;
-  --accent: #6b4e8a;
-  --accent-dark: #523a6b;
-  --success: #5e7d3a;
-  --success-dark: #475e2b;
-  --neutral: #8a7a63;
-  --neutral-dark: #6c5e4a;
-  --board-surface: rgba(150,115,70,.22);
-  --board-shadow: 0 10px 26px rgba(110,75,35,.32), inset 0 1px 0 rgba(255,248,232,.5);
-  --surface: rgba(250,240,220,.85);
-  --surface-solid: #f8efdc;
-  --surface-border: rgba(150,115,70,.22);
-  --surface-alt: rgba(238,224,195,.85);
-  --surface-alt-border: rgba(150,115,70,.2);
-  --btn-inactive: #efe1c4;
-  --btn-inactive-hover: #e4d1ac;
-  --btn-inactive-border: rgba(150,115,70,.28);
-  --btn-inactive-text: #6b4a2c;
-  --text-main: #5a4022;
-  --text-sub: #7a5830;
-  --text-accent: #6b4a2c;
-  --text-bold: #422e18;
-  --text-dim: #8a7560;
-  --text-rules: #6b5638;
-  --text-blind-hint: #8a7560;
-  --overlay: rgba(55,38,18,.5);
-  --version-bg: rgba(250,240,220,.76);
-  --version-border: rgba(150,115,70,.28);
-  --skin-btn-bg: rgba(250,240,220,.68);
-  --skin-btn-border: rgba(150,115,70,.28);
-  --skin-btn-text: #5a4022;
-  --skin-btn-hover: rgba(238,224,195,.92);
-}
-
 /* ── Circus skin ────────────────────────────────────────────────────── */
 body[data-skin="circus"] {
   --body-bg:
@@ -475,13 +377,6 @@ body[data-skin="circus"] {
   background-image: radial-gradient(circle at 35% 30%, var(--p1) 0 5px, transparent 7px);
   background-size: 22px 22px;
 }
-/* Faceted crystals */
-.cell.pat-crystals {
-  background-image:
-    linear-gradient(45deg, var(--p1) 25%, transparent 25%),
-    linear-gradient(-45deg, var(--p1) 25%, transparent 25%);
-  background-size: 18px 18px;
-}
 /* Cracked hide */
 .cell.pat-cracks {
   background-image:
@@ -511,17 +406,6 @@ body[data-skin="circus"] {
     radial-gradient(circle at 40% 70%, var(--p2, var(--p1)) 0 2.4px, transparent 3.4px),
     radial-gradient(circle at 84% 76%, var(--p1) 0 3px, transparent 4px);
   background-size: 26px 26px;
-}
-/* Neon grid */
-.cell.pat-grid-glow {
-  background-image:
-    linear-gradient(var(--p1) 1px, transparent 1px),
-    linear-gradient(90deg, var(--p1) 1px, transparent 1px);
-  background-size: 12px 12px;
-}
-/* CRT scanlines */
-.cell.pat-scanlines {
-  background-image: repeating-linear-gradient(var(--p1) 0 1px, transparent 1px 5px);
 }
 /* Soft fur strokes */
 .cell.pat-fur {
