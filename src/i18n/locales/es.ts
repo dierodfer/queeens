@@ -6,6 +6,7 @@ export const esLocale: LocaleDict = {
   time: 'Tiempo',
   mode: 'Modo',
   noMode: 'Sin seleccionar',
+  skin: 'Tema',
   memorizeBoard: 'Memoriza el tablero',
   startNow: 'Empezar ya',
   queens: 'Queeens',

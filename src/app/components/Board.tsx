@@ -1,6 +1,7 @@
 import type { CellState } from '../../lib/game';
 import type { GameMode } from '../../i18n';
 import type { RotationFx } from '../hooks/useTwisterRotation';
+import type { Skin } from '../skins';
 import { COLORS, ROTATION_ANIM_MS } from '../constants';
 import { Cell } from './Cell';
 import type { Tr } from './types';
@@ -20,6 +21,8 @@ type BoardProps = {
   rotationFx: RotationFx;
   onCellClick: (i: number) => void;
   onCellMark: (i: number) => void;
+  colors?: string[];
+  skin?: Skin;
   tr: Tr;
 };
 
@@ -51,11 +54,14 @@ export function Board({
   rotationFx,
   onCellClick,
   onCellMark,
+  colors = COLORS,
+  skin,
   tr,
 }: BoardProps) {
   const animation = rotationFx
     ? `boardSpin${rotationFx.direction === 'right' ? 'Right' : 'Left'} ${ROTATION_ANIM_MS}ms cubic-bezier(.22,.86,.24,1)`
     : undefined;
+  const patterned = skin?.patterned && skin.regions;
 
   return (
     <div
@@ -65,24 +71,30 @@ export function Board({
       className={boardClassName(size, won)}
       style={{ gridTemplateColumns: `repeat(${size}, ${cellPixels(size)}px)`, animation }}
     >
-      {cells.map((cell, i) => (
-        <Cell
-          key={i}
-          index={i}
-          size={size}
-          cell={cell}
-          color={showBlindColors ? COLORS[board[i]] : '#d8dee9'}
-          conflict={conflicts.has(i)}
-          justPlaced={i === lastPlacedQueen}
-          attacked={attacked.has(i) && mode !== 'blind'}
-          sealed={mode !== 'blind' && sealedRegions.has(board[i])}
-          highlightDelay={newlyAttacked.has(i) ? (newlyAttacked.get(i) || 0) * 0.045 : null}
-          interactive={!won}
-          onClick={onCellClick}
-          onMark={onCellMark}
-          tr={tr}
-        />
-      ))}
+      {cells.map((cell, i) => {
+        const region = patterned ? skin!.regions![board[i]] : undefined;
+        return (
+          <Cell
+            key={i}
+            index={i}
+            size={size}
+            cell={cell}
+            color={showBlindColors ? colors[board[i]] : '#d8dee9'}
+            conflict={conflicts.has(i)}
+            justPlaced={i === lastPlacedQueen}
+            attacked={attacked.has(i) && mode !== 'blind'}
+            sealed={mode !== 'blind' && sealedRegions.has(board[i])}
+            highlightDelay={newlyAttacked.has(i) ? (newlyAttacked.get(i) || 0) * 0.045 : null}
+            interactive={!won}
+            regionClass={showBlindColors && region ? `pat-${region.pattern}` : undefined}
+            patternColors={showBlindColors && region ? { p1: region.p1, p2: region.p2 } : undefined}
+            animal={showBlindColors ? region?.animal : undefined}
+            onClick={onCellClick}
+            onMark={onCellMark}
+            tr={tr}
+          />
+        );
+      })}
     </div>
   );
 }

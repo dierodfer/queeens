@@ -6,6 +6,7 @@ export const enLocale: LocaleDict = {
   time: 'Time',
   mode: 'Mode',
   noMode: 'Not selected',
+  skin: 'Skin',
   memorizeBoard: 'Memorize board',
   startNow: 'Start now',
   queens: 'Queeens',
