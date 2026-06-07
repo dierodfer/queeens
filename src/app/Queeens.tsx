@@ -298,6 +298,7 @@ export default function Queeens() {
           onCellClick={placeQueen}
           onCellMark={toggleMark}
           colors={activeSkin.boardColors}
+          skin={activeSkin}
           tr={tr}
         />
       )}

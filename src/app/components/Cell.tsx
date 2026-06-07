@@ -14,6 +14,10 @@ export type CellProps = {
   /** Animation delay (s) when the cell was just attacked, or null. */
   highlightDelay: number | null;
   interactive: boolean;
+  /** CSS class painting this region's animal print (Safari skin). */
+  regionClass?: string;
+  /** Animal emoji placed instead of a queen (Safari skin). */
+  animal?: string;
   onClick: (i: number) => void;
   onMark: (i: number) => void;
   tr: Tr;
@@ -30,18 +34,27 @@ export function Cell({
   sealed,
   highlightDelay,
   interactive,
+  regionClass,
+  animal,
   onClick,
   onMark,
   tr,
 }: CellProps) {
   const classes = ['cell'];
+  if (regionClass) classes.push(regionClass);
   if (sealed) classes.push('sealed-region');
   let content = '';
+  let contentClass = 'x-mark';
   let state = tr('cellEmpty');
 
   if (cell === QUEEN) {
     classes.push('queen');
     state = tr('cellQueen');
+    if (animal) {
+      classes.push('animal-piece');
+      content = animal;
+      contentClass = 'animal-mark';
+    }
     if (conflict) classes.push('conflict');
     if (justPlaced) classes.push('just-placed');
   } else if (cell === MARK) {
@@ -53,6 +66,8 @@ export function Cell({
     content = '✕';
     state = tr('cellBlocked');
   }
+
+  const isXMark = contentClass === 'x-mark';
 
   const row = ((index / size) | 0) + 1;
   const col = (index % size) + 1;
@@ -84,8 +99,12 @@ export function Cell({
     >
       {content && (
         <span
-          className={`x-mark${highlightDelay !== null ? ' x-new' : ''}`}
-          style={highlightDelay !== null ? { animationDelay: `${highlightDelay}s` } : undefined}
+          className={`${contentClass}${isXMark && highlightDelay !== null ? ' x-new' : ''}`}
+          style={
+            isXMark && highlightDelay !== null
+              ? { animationDelay: `${highlightDelay}s` }
+              : undefined
+          }
         >
           {content}
         </span>

@@ -52,197 +52,161 @@ body {
   --skin-btn-hover: rgba(255,255,255,.85);
 }
 
-/* ── Zebra skin ─────────────────────────────────────────────────────── */
-body[data-skin="zebra"] {
-  --body-bg: linear-gradient(160deg, #1a1a1a 0%, #2d2d2d 100%);
-  --primary: #444444;
-  --primary-dark: #222222;
-  --primary-gradient: linear-gradient(160deg, #555 0%, #333 100%);
-  --primary-gradient-hover: linear-gradient(160deg, #444 0%, #222 100%);
-  --primary-active: linear-gradient(160deg, #888 0%, #555 100%);
-  --primary-active-border: #111;
-  --primary-active-shadow: rgba(0,0,0,.5);
-  --secondary: #666666;
-  --secondary-dark: #444444;
-  --secondary-disabled: #555555;
-  --accent: #777777;
-  --accent-dark: #555555;
-  --success: #444444;
-  --success-dark: #222222;
-  --neutral: #555555;
-  --neutral-dark: #333333;
-  --board-surface: rgba(255,255,255,.08);
-  --board-shadow: 0 10px 26px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.12);
-  --surface: rgba(35,35,35,.95);
-  --surface-solid: #242424;
-  --surface-border: rgba(255,255,255,.14);
-  --surface-alt: rgba(45,45,45,.9);
-  --surface-alt-border: rgba(255,255,255,.12);
-  --btn-inactive: #3a3a3a;
-  --btn-inactive-hover: #4a4a4a;
-  --btn-inactive-border: rgba(255,255,255,.18);
-  --btn-inactive-text: #dedede;
-  --text-main: #f0f0f0;
-  --text-sub: #c8c8c8;
-  --text-accent: #e0e0e0;
-  --text-bold: #ffffff;
-  --text-dim: #aaaaaa;
-  --text-rules: #cccccc;
-  --text-blind-hint: #aaaaaa;
-  --overlay: rgba(0,0,0,.72);
-  --version-bg: rgba(25,25,25,.85);
-  --version-border: rgba(255,255,255,.14);
-  --skin-btn-bg: rgba(255,255,255,.1);
-  --skin-btn-border: rgba(255,255,255,.18);
-  --skin-btn-text: #f0f0f0;
-  --skin-btn-hover: rgba(255,255,255,.18);
+/* ── Safari skin ────────────────────────────────────────────────────── */
+body[data-skin="safari"] {
+  --body-bg:
+    radial-gradient(1200px 700px at 10% -10%, #fef0c8 0%, rgba(254,240,200,0) 60%),
+    radial-gradient(1000px 600px at 100% 110%, #c9952f 0%, rgba(201,149,47,0) 55%),
+    linear-gradient(160deg, #f3dca0 0%, #c79a52 100%);
+  --primary: #8a5a2b;
+  --primary-dark: #6b4420;
+  --primary-gradient: linear-gradient(160deg, #a86a2e 0%, #7c4d20 100%);
+  --primary-gradient-hover: linear-gradient(160deg, #945c26 0%, #6a4118 100%);
+  --primary-active: linear-gradient(160deg, #c98a3a 0%, #a86a2e 100%);
+  --primary-active-border: #6b4420;
+  --primary-active-shadow: rgba(120,77,32,.4);
+  --secondary: #b8742e;
+  --secondary-dark: #925a20;
+  --secondary-disabled: #d6b487;
+  --accent: #7a5a2e;
+  --accent-dark: #5c4220;
+  --success: #5b8f2e;
+  --success-dark: #426a1f;
+  --neutral: #8a7a5a;
+  --neutral-dark: #6b5c40;
+  --board-surface: rgba(120,80,30,.22);
+  --board-shadow: 0 10px 26px rgba(80,50,10,.35), inset 0 1px 0 rgba(255,250,230,.45);
+  --surface: rgba(250,238,205,.85);
+  --surface-solid: #f7eccf;
+  --surface-border: rgba(120,80,30,.22);
+  --surface-alt: rgba(244,224,170,.85);
+  --surface-alt-border: rgba(120,80,30,.2);
+  --btn-inactive: #efdcab;
+  --btn-inactive-hover: #e6cd93;
+  --btn-inactive-border: rgba(120,80,30,.28);
+  --btn-inactive-text: #5c3d18;
+  --text-main: #4a3216;
+  --text-sub: #6b4a1f;
+  --text-accent: #5c3d18;
+  --text-bold: #3a2410;
+  --text-dim: #8a6a3a;
+  --text-rules: #5c4220;
+  --text-blind-hint: #8a6a3a;
+  --overlay: rgba(50,32,8,.55);
+  --version-bg: rgba(250,238,205,.78);
+  --version-border: rgba(120,80,30,.28);
+  --skin-btn-bg: rgba(250,238,205,.7);
+  --skin-btn-border: rgba(120,80,30,.28);
+  --skin-btn-text: #4a3216;
+  --skin-btn-hover: rgba(244,224,170,.92);
 }
 
-/* ── Leopard skin ───────────────────────────────────────────────────── */
-body[data-skin="leopard"] {
-  --body-bg:
-    radial-gradient(1200px 700px at 10% -10%, #fff9e6 0%, rgba(255,249,230,0) 60%),
-    radial-gradient(1000px 600px at 100% 110%, #ffe082 0%, rgba(255,224,130,0) 55%),
-    linear-gradient(160deg, #fdf3c8 0%, #f5d870 100%);
-  --primary: #7A4800;
-  --primary-dark: #5A3200;
-  --primary-gradient: linear-gradient(160deg, #C47D00 0%, #9A5E00 100%);
-  --primary-gradient-hover: linear-gradient(160deg, #A86C00 0%, #7A4800 100%);
-  --primary-active: linear-gradient(160deg, #E09500 0%, #C07000 100%);
-  --primary-active-border: #8B5500;
-  --primary-active-shadow: rgba(160,80,0,.35);
-  --secondary: #B87333;
-  --secondary-dark: #8B5420;
-  --secondary-disabled: #D4A870;
-  --accent: #9A4E00;
-  --accent-dark: #7A3800;
-  --success: #556B22;
-  --success-dark: #3a4e18;
-  --neutral: #8B7355;
-  --neutral-dark: #6B5535;
-  --board-surface: rgba(255,245,180,.5);
-  --board-shadow: 0 10px 26px rgba(100,60,0,.2), inset 0 1px 0 rgba(255,255,255,.7);
-  --surface: rgba(255,252,220,.88);
-  --surface-solid: #fffde8;
-  --surface-border: rgba(160,110,0,.2);
-  --surface-alt: rgba(255,243,170,.85);
-  --surface-alt-border: rgba(140,90,0,.18);
-  --btn-inactive: #fff8cc;
-  --btn-inactive-hover: #fff0a0;
-  --btn-inactive-border: rgba(140,90,0,.25);
-  --btn-inactive-text: #5C3D00;
-  --text-main: #4A2C00;
-  --text-sub: #6B4200;
-  --text-accent: #5C3800;
-  --text-bold: #3A1E00;
-  --text-dim: #8B6420;
-  --text-rules: #5C4010;
-  --text-blind-hint: #8B6420;
-  --overlay: rgba(60,30,0,.5);
-  --version-bg: rgba(255,248,200,.75);
-  --version-border: rgba(140,90,0,.25);
-  --skin-btn-bg: rgba(255,248,200,.7);
-  --skin-btn-border: rgba(140,90,0,.25);
-  --skin-btn-text: #4A2C00;
-  --skin-btn-hover: rgba(255,240,160,.9);
+/* ── Safari board: each region is a different animal print ──────────── */
+/* Tile the prints across the whole cell (base .cell uses no-repeat). */
+.cell[class*="safari-r"] {
+  background-repeat: repeat;
+  background-position: top left;
+  background-size: auto;
 }
-
-/* ── Cobra skin ─────────────────────────────────────────────────────── */
-body[data-skin="cobra"] {
-  --body-bg:
-    radial-gradient(1200px 700px at 10% -10%, #0a1a0a 0%, rgba(10,26,10,0) 60%),
-    radial-gradient(1000px 600px at 100% 110%, #0d2410 0%, rgba(13,36,16,0) 55%),
-    linear-gradient(160deg, #080e08 0%, #0d1a0d 100%);
-  --primary: #1a5c1a;
-  --primary-dark: #0d3a0d;
-  --primary-gradient: linear-gradient(160deg, #1e7020 0%, #145218 100%);
-  --primary-gradient-hover: linear-gradient(160deg, #185a18 0%, #0e420e 100%);
-  --primary-active: linear-gradient(160deg, #28a030 0%, #1c7824 100%);
-  --primary-active-border: #0e5014;
-  --primary-active-shadow: rgba(20,120,30,.4);
-  --secondary: #1e6e22;
-  --secondary-dark: #145018;
-  --secondary-disabled: #3a5a3a;
-  --accent: #1e7040;
-  --accent-dark: #14522c;
-  --success: #24882a;
-  --success-dark: #1a6620;
-  --neutral: #3a5a3a;
-  --neutral-dark: #2a3e2a;
-  --board-surface: rgba(10,35,10,.65);
-  --board-shadow: 0 10px 26px rgba(0,20,0,.65), inset 0 1px 0 rgba(80,200,80,.1);
-  --surface: rgba(12,30,12,.95);
-  --surface-solid: #0a1e0a;
-  --surface-border: rgba(80,200,80,.14);
-  --surface-alt: rgba(18,42,18,.9);
-  --surface-alt-border: rgba(80,200,80,.12);
-  --btn-inactive: #162816;
-  --btn-inactive-hover: #1e381e;
-  --btn-inactive-border: rgba(80,200,80,.2);
-  --btn-inactive-text: #88c888;
-  --text-main: #98d498;
-  --text-sub: #6ab46a;
-  --text-accent: #88c888;
-  --text-bold: #c0e8c0;
-  --text-dim: #50a050;
-  --text-rules: #78c478;
-  --text-blind-hint: #60a860;
-  --overlay: rgba(0,8,0,.72);
-  --version-bg: rgba(8,22,8,.85);
-  --version-border: rgba(80,200,80,.18);
-  --skin-btn-bg: rgba(20,50,20,.8);
-  --skin-btn-border: rgba(80,200,80,.2);
-  --skin-btn-text: #98d498;
-  --skin-btn-hover: rgba(30,70,30,.9);
+/* Zebra */
+.cell.safari-r0 {
+  background-image: repeating-linear-gradient(96deg, #1b1b1b 0 5px, transparent 5px 13px);
 }
-
-/* ── Flamingo skin ──────────────────────────────────────────────────── */
-body[data-skin="flamingo"] {
-  --body-bg:
-    radial-gradient(1200px 700px at 10% -10%, #fff0f5 0%, rgba(255,240,245,0) 60%),
-    radial-gradient(1000px 600px at 100% 110%, #ffd6e8 0%, rgba(255,214,232,0) 55%),
-    linear-gradient(160deg, #fff0f5 0%, #ffc8dc 100%);
-  --primary: #C2185B;
-  --primary-dark: #8E0038;
-  --primary-gradient: linear-gradient(160deg, #E91E8C 0%, #C2185B 100%);
-  --primary-gradient-hover: linear-gradient(160deg, #C8107A 0%, #A00E4A 100%);
-  --primary-active: linear-gradient(160deg, #F06292 0%, #E91E8C 100%);
-  --primary-active-border: #880040;
-  --primary-active-shadow: rgba(200,30,100,.35);
-  --secondary: #E91E8C;
-  --secondary-dark: #C01870;
-  --secondary-disabled: #F7A8C8;
-  --accent: #9C27B0;
-  --accent-dark: #7B1FA2;
-  --success: #2e7d32;
-  --success-dark: #1b5e20;
-  --neutral: #8d6e88;
-  --neutral-dark: #6a4e65;
-  --board-surface: rgba(255,210,230,.45);
-  --board-shadow: 0 10px 26px rgba(180,30,100,.15), inset 0 1px 0 rgba(255,255,255,.7);
-  --surface: rgba(255,240,248,.9);
-  --surface-solid: #fff5fa;
-  --surface-border: rgba(200,60,120,.18);
-  --surface-alt: rgba(255,225,240,.85);
-  --surface-alt-border: rgba(200,60,120,.16);
-  --btn-inactive: #fff0f5;
-  --btn-inactive-hover: #ffe0ec;
-  --btn-inactive-border: rgba(200,60,120,.22);
-  --btn-inactive-text: #880E4F;
-  --text-main: #880E4F;
-  --text-sub: #AD1457;
-  --text-accent: #880E4F;
-  --text-bold: #560027;
-  --text-dim: #C2185B;
-  --text-rules: #9C1450;
-  --text-blind-hint: #AD1457;
-  --overlay: rgba(100,0,50,.48);
-  --version-bg: rgba(255,240,248,.75);
-  --version-border: rgba(200,60,120,.22);
-  --skin-btn-bg: rgba(255,240,248,.75);
-  --skin-btn-border: rgba(200,60,120,.22);
-  --skin-btn-text: #880E4F;
-  --skin-btn-hover: rgba(255,220,238,.9);
+/* Tiger */
+.cell.safari-r1 {
+  background-image: repeating-linear-gradient(116deg, #241307 0 4px, transparent 4px 14px);
+}
+/* Leopard */
+.cell.safari-r2 {
+  background-image:
+    radial-gradient(circle at 20% 25%, #4a2c0c 0 3.5px, transparent 4.5px),
+    radial-gradient(circle at 62% 55%, #4a2c0c 0 3.5px, transparent 4.5px),
+    radial-gradient(circle at 86% 22%, #4a2c0c 0 3px, transparent 4px),
+    radial-gradient(circle at 34% 82%, #4a2c0c 0 3px, transparent 4px),
+    radial-gradient(circle at 82% 84%, #4a2c0c 0 3.5px, transparent 4.5px);
+  background-size: 26px 26px;
+}
+/* Cheetah */
+.cell.safari-r3 {
+  background-image: radial-gradient(circle, #2a1c08 1.6px, transparent 2.3px);
+  background-size: 9px 9px;
+}
+/* Giraffe */
+.cell.safari-r4 {
+  background-image:
+    radial-gradient(circle at 26% 30%, #b06c24 0 7px, transparent 8px),
+    radial-gradient(circle at 76% 72%, #b06c24 0 7px, transparent 8px),
+    radial-gradient(circle at 82% 20%, #b06c24 0 5px, transparent 6px),
+    radial-gradient(circle at 18% 80%, #b06c24 0 5px, transparent 6px);
+  background-size: 30px 30px;
+}
+/* Snake (diamond scales) */
+.cell.safari-r5 {
+  background-image:
+    linear-gradient(135deg, #2f5418 25%, transparent 25%),
+    linear-gradient(225deg, #2f5418 25%, transparent 25%),
+    linear-gradient(315deg, #2f5418 25%, transparent 25%),
+    linear-gradient(45deg, #2f5418 25%, transparent 25%);
+  background-size: 14px 14px;
+}
+/* Crocodile (scale grid) */
+.cell.safari-r6 {
+  background-image:
+    linear-gradient(#2a3e16 1px, transparent 1px),
+    linear-gradient(90deg, #2a3e16 1px, transparent 1px),
+    radial-gradient(circle at 50% 50%, #50702e 0 2.6px, transparent 3.4px);
+  background-size: 10px 10px;
+}
+/* Elephant (subtle wrinkle) */
+.cell.safari-r7 {
+  background-image: repeating-linear-gradient(120deg, rgba(0,0,0,.12) 0 1px, transparent 1px 7px);
+}
+/* Lion (sandy fur) */
+.cell.safari-r8 {
+  background-image: repeating-linear-gradient(80deg, rgba(90,50,10,.16) 0 1px, transparent 1px 6px);
+}
+/* Cow (large blobs) */
+.cell.safari-r9 {
+  background-image:
+    radial-gradient(ellipse 9px 7px at 30% 35%, #1a1a1a 99%, transparent 100%),
+    radial-gradient(ellipse 7px 9px at 76% 72%, #1a1a1a 99%, transparent 100%);
+  background-size: 28px 28px;
+}
+/* Hyena (scattered spots) */
+.cell.safari-r10 {
+  background-image:
+    radial-gradient(circle at 30% 28%, #3a2410 0 3px, transparent 4px),
+    radial-gradient(circle at 72% 62%, #3a2410 0 2.4px, transparent 3.4px),
+    radial-gradient(circle at 48% 86%, #3a2410 0 2.4px, transparent 3.4px);
+  background-size: 18px 18px;
+}
+/* Rhino (cracked hide) */
+.cell.safari-r11 {
+  background-image:
+    linear-gradient(60deg, rgba(0,0,0,.14) 0 1px, transparent 1px 9px),
+    linear-gradient(-30deg, rgba(0,0,0,.1) 0 1px, transparent 1px 11px);
+}
+/* Hippo (smooth sheen) */
+.cell.safari-r12 {
+  background-image: radial-gradient(circle at 35% 30%, rgba(255,255,255,.22) 0 5px, transparent 7px);
+}
+/* Monkey (fur) */
+.cell.safari-r13 {
+  background-image: repeating-linear-gradient(70deg, rgba(0,0,0,.16) 0 1px, transparent 1px 5px);
+}
+/* Parrot (tropical feathers) */
+.cell.safari-r14 {
+  background-image:
+    radial-gradient(circle at 50% 0, #156b5d 0 5px, transparent 6px),
+    radial-gradient(circle at 50% 100%, #156b5d 0 5px, transparent 6px);
+  background-size: 12px 12px;
+}
+/* Flamingo (feather scallops) */
+.cell.safari-r15 {
+  background-image:
+    radial-gradient(circle at 50% 0, #d65a86 0 5px, transparent 6px),
+    radial-gradient(circle at 50% 100%, #d65a86 0 5px, transparent 6px);
+  background-size: 12px 12px;
 }
 
 /* ── Layout ─────────────────────────────────────────────────────────── */
@@ -522,6 +486,48 @@ body {
 .cell.queen.conflict {
   background-image: url('../assets/queen-danger.svg');
   filter: drop-shadow(0 1px 2px rgba(127, 16, 16, 0.38));
+}
+
+/* Safari animal piece (replaces the queen icon) */
+.cell.queen.animal-piece,
+.cell.queen.animal-piece.conflict {
+  background-image: none;
+  filter: none;
+}
+.cell.queen.animal-piece.just-placed {
+  animation: none;
+}
+.animal-mark {
+  display: inline-block;
+  font-size: 30px;
+  line-height: 1;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.35));
+}
+.small-cells .animal-mark {
+  font-size: 22px;
+}
+.smallest-cells .animal-mark {
+  font-size: 16px;
+}
+.cell.queen.animal-piece.conflict .animal-mark {
+  filter: drop-shadow(0 0 4px rgba(220, 30, 30, 0.95));
+}
+.cell.queen.animal-piece.just-placed .animal-mark {
+  animation: animalPop 0.28s ease-out both;
+}
+@keyframes animalPop {
+  0% {
+    transform: scale(0);
+    opacity: 0.3;
+  }
+  60% {
+    transform: scale(1.25);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 /* Overlay */
