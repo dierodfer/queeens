@@ -1,6 +1,9 @@
-import type { KeyboardEvent, MouseEvent } from 'react';
+import type { CSSProperties, KeyboardEvent, MouseEvent } from 'react';
 import { MARK, QUEEN, type CellState } from '../../lib/game';
 import type { Tr } from './types';
+
+/** Print colours for a region, exposed to CSS as --p1 / --p2 custom properties. */
+export type PatternColors = { p1: string; p2?: string };
 
 export type CellProps = {
   index: number;
@@ -14,9 +17,11 @@ export type CellProps = {
   /** Animation delay (s) when the cell was just attacked, or null. */
   highlightDelay: number | null;
   interactive: boolean;
-  /** CSS class painting this region's animal print (Safari skin). */
+  /** Generic CSS class painting this region's animal print (patterned skins). */
   regionClass?: string;
-  /** Animal emoji placed instead of a queen (Safari skin). */
+  /** Colours fed to the print class via --p1 / --p2 custom properties. */
+  patternColors?: PatternColors;
+  /** Animal emoji placed instead of a queen (patterned skins). */
   animal?: string;
   onClick: (i: number) => void;
   onMark: (i: number) => void;
@@ -35,6 +40,7 @@ export function Cell({
   highlightDelay,
   interactive,
   regionClass,
+  patternColors,
   animal,
   onClick,
   onMark,
@@ -89,7 +95,15 @@ export function Cell({
       aria-label={`${tr('cellRow')} ${row}, ${tr('cellCol')} ${col}: ${state}`}
       aria-pressed={cell === QUEEN}
       tabIndex={interactive ? 0 : -1}
-      style={{ backgroundColor: color }}
+      style={
+        {
+          backgroundColor: color,
+          ...(patternColors && {
+            '--p1': patternColors.p1,
+            '--p2': patternColors.p2 ?? patternColors.p1,
+          }),
+        } as CSSProperties
+      }
       onClick={() => onClick(index)}
       onContextMenu={(e: MouseEvent<HTMLDivElement>) => {
         e.preventDefault();

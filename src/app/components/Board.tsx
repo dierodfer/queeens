@@ -86,7 +86,8 @@ export function Board({
             sealed={mode !== 'blind' && sealedRegions.has(board[i])}
             highlightDelay={newlyAttacked.has(i) ? (newlyAttacked.get(i) || 0) * 0.045 : null}
             interactive={!won}
-            regionClass={showBlindColors ? region?.className : undefined}
+            regionClass={showBlindColors && region ? `pat-${region.pattern}` : undefined}
+            patternColors={showBlindColors && region ? { p1: region.p1, p2: region.p2 } : undefined}
             animal={showBlindColors ? region?.animal : undefined}
             onClick={onCellClick}
             onMark={onCellMark}
