@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { I18N, type BlindLevel, type GameMode, type Lang } from '../i18n';
+import { SKINS, type SkinId } from './skins';
 import {
   EMPTY,
   MARK,
@@ -31,6 +32,7 @@ import { TopBar } from './components/TopBar';
 import { WinPopup } from './components/WinPopup';
 
 export default function Queeens() {
+  const [skinId, setSkinId] = useState<SkinId>('default');
   const [lang, setLang] = useState<Lang>('en');
   const [size, setSize] = useState<number | null>(null);
   const [board, setBoard] = useState<number[]>([]);
@@ -242,6 +244,19 @@ export default function Queeens() {
     [blind, won, cells, setCellAt],
   );
 
+  const activeSkin = SKINS.find((s) => s.id === skinId) ?? SKINS[0];
+
+  useEffect(() => {
+    document.body.dataset.skin = skinId;
+  }, [skinId]);
+
+  const cycleSkin = useCallback(() => {
+    setSkinId((prev) => {
+      const idx = SKINS.findIndex((s) => s.id === prev);
+      return SKINS[(idx + 1) % SKINS.length].id;
+    });
+  }, []);
+
   const overlay = showMenu || showWin || showExitConfirm;
   const showBlindColors = mode !== 'blind' || blind.active;
   const locale = I18N[lang];
@@ -260,6 +275,9 @@ export default function Queeens() {
         onMenu={goToMenu}
         onNewBoard={() => size && startGame(size)}
         onSkipBlind={blind.stop}
+        skinEmoji={activeSkin.emoji}
+        skinLabel={activeSkin.label}
+        onCycleSkin={cycleSkin}
         tr={tr}
       />
 
@@ -279,6 +297,8 @@ export default function Queeens() {
           rotationFx={rotation.rotationFx}
           onCellClick={placeQueen}
           onCellMark={toggleMark}
+          colors={activeSkin.boardColors}
+          skin={activeSkin}
           tr={tr}
         />
       )}

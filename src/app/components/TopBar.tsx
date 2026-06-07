@@ -15,6 +15,9 @@ type TopBarProps = {
   onMenu: () => void;
   onNewBoard: () => void;
   onSkipBlind: () => void;
+  skinEmoji: string;
+  skinLabel: string;
+  onCycleSkin: () => void;
   tr: Tr;
 };
 
@@ -29,6 +32,9 @@ export function TopBar({
   onMenu,
   onNewBoard,
   onSkipBlind,
+  skinEmoji,
+  skinLabel,
+  onCycleSkin,
   tr,
 }: TopBarProps) {
   return (
@@ -44,13 +50,17 @@ export function TopBar({
         <button id="shuffle-btn" disabled={!size} onClick={onNewBoard}>
           {tr('newBoard')}
         </button>
+        <button id="skin-btn" onClick={onCycleSkin} title={skinLabel}>
+          {skinEmoji}
+        </button>
       </div>
 
       <p id="timer">
         {tr('time')}: {fmtClock(elapsed)}
       </p>
       <p id="mode-label">
-        {tr('mode')}: {mode ? tr(MODE_LABEL_KEYS[mode]) : tr('noMode')}
+        {tr('mode')}: {mode ? tr(MODE_LABEL_KEYS[mode]) : tr('noMode')} · {tr('skin')}:{' '}
+        {skinEmoji} {skinLabel}
       </p>
       {mode === 'blind' && blindPreviewActive && (
         <div id="blind-preview-wrap">
