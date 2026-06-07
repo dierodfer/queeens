@@ -1,8 +1,6 @@
-name: Deploy to GitHub Pages
+name: Deploy Test to GitHub Pages
 
 on:
-  push:
-    branches: ['main']
   workflow_dispatch:
 
 permissions:
@@ -13,7 +11,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  deploy:
+  deploy-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -29,11 +27,13 @@ jobs:
         run: npm ci
 
       - name: Build
+        env:
+          VITE_BASE_PATH: /queeens/queeens-test/
         run: |
           npm run build
           cp dist/index.html dist/404.html
 
-      - name: Publish to gh-pages (root, preserving queeens-test/)
+      - name: Publish to gh-pages/queeens-test (preserving production root)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -50,15 +50,14 @@ jobs:
             git checkout -q --orphan gh-pages
           fi
 
-          # Replace production (root) files, keep the queeens-test/ subsite intact
-          find . -mindepth 1 -maxdepth 1 ! -name '.git' ! -name 'queeens-test' -exec rm -rf {} +
-          cp -r ../dist/. .
-          touch .nojekyll
+          rm -rf queeens-test
+          mkdir queeens-test
+          cp -r ../dist/. queeens-test/
 
           git add -A
           if git diff --staged --quiet; then
             echo "No changes to publish."
           else
-            git commit -q -m "Deploy /queeens/ (${GITHUB_SHA::7})"
+            git commit -q -m "Deploy /queeens/queeens-test/ from ${GITHUB_REF_NAME} (${GITHUB_SHA::7})"
             git push -q origin gh-pages
           fi
