@@ -19,7 +19,7 @@ export const COLORS = [
   '#9AD1D4',
 ];
 
-export const LEVEL_OPTIONS = [4, 5, 6, 7, 8, 10, 12, 14];
+export const LEVEL_OPTIONS = [5, 6, 7, 8, 9, 10, 12, 14];
 
 export const TORNADO_BIAS = 0.65;
 export const ROTATION_ANIM_MS = 900;
