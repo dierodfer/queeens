@@ -2,7 +2,6 @@ type Board2D = number[][];
 type Coord = [number, number];
 
 const seedBoards: Record<number, Board2D[]> = {
-  4: [],
   5: [],
   6: [],
   7: [],
@@ -188,7 +187,6 @@ function generateRealBoards(n: number, count: number): Board2D[] {
 }
 
 const proceduralPerSize: Record<number, number> = {
-  4: 6,
   5: 6,
   6: 6,
   7: 6,
