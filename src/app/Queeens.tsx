@@ -20,7 +20,7 @@ import {
   saveRankingStore,
 } from '../lib/ranking';
 import { getBlindPreviewMs, getBlindReplayMs } from '../lib/blind';
-import { pickBoard } from '../lib/boardPicker';
+import { getBoardCount, pickBoard } from '../lib/boardPicker';
 import { useTimer } from './hooks/useTimer';
 import { useBlindPreview } from './hooks/useBlindPreview';
 import { useTwisterRotation } from './hooks/useTwisterRotation';
@@ -269,6 +269,7 @@ export default function Queeens() {
         mode={mode}
         elapsed={elapsed}
         queenCount={queenCount}
+        boardCount={size ? getBoardCount(size) : 0}
         version={version}
         blindPreviewActive={blind.active}
         blindPreviewRemainingMs={blind.remainingMs}

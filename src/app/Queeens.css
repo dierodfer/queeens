@@ -554,6 +554,13 @@ body {
   color: var(--text-main);
   text-shadow: 0 1px 0 rgba(255,255,255,.5);
 }
+#board-counter {
+  margin-top: 2px;
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--text-main);
+  text-shadow: 0 1px 0 rgba(255,255,255,.5);
+}
 #app-version {
   position: fixed;
   right: 12px;

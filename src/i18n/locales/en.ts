@@ -22,6 +22,7 @@ export const enLocale: LocaleDict = {
   tookTime: 'You took',
   retryBoard: 'Retry board',
   nextBoard: 'Next board',
+  boardsAvailable: 'Boards available',
   confirmExitTitle: 'Leave current game?',
   confirmExit: 'Returning to menu will end the current game. Continue?',
   cancel: 'Cancel',
