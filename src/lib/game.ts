@@ -71,8 +71,7 @@ export function getAttacked(cells: CellState[], board: number[], size: number): 
 }
 
 /** Returns every cell attacked by a single queen, excluding its own cell. */
-export function getAttackedByOneQueen(qi: number, board: number[], size: number): Set<number> {
-  const set = new Set<number>();
+export function getAttackedByOneQueen(qi: number, board: number[], size: number): Set<number> {  const set = new Set<number>();
   const qx = qi % size;
   const qy = (qi / size) | 0;
   const region = board[qi];
@@ -89,6 +88,36 @@ export function getAttackedByOneQueen(qi: number, board: number[], size: number)
     if (cellRegion === region) set.add(ci);
   });
   set.delete(qi);
+  return set;
+}
+
+/**
+ * Returns the indices of every placed queen that attacks cell `i`
+ * (shares its row, column, an adjacent diagonal, or its colour region).
+ */
+export function getAttackingQueens(
+  i: number,
+  cells: CellState[],
+  board: number[],
+  size: number,
+): Set<number> {
+  const set = new Set<number>();
+  const x = i % size;
+  const y = (i / size) | 0;
+  const region = board[i];
+  cells.forEach((s, qi) => {
+    if (s !== QUEEN || qi === i) return;
+    const qx = qi % size;
+    const qy = (qi / size) | 0;
+    if (
+      qx === x ||
+      qy === y ||
+      (Math.abs(qx - x) === 1 && Math.abs(qy - y) === 1) ||
+      board[qi] === region
+    ) {
+      set.add(qi);
+    }
+  });
   return set;
 }
 

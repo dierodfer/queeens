@@ -5,6 +5,7 @@ import {
   QUEEN,
   getAttacked,
   getAttackedByOneQueen,
+  getAttackingQueens,
   getConflicts,
   oppositeDirection,
   rotateFlat,
@@ -93,6 +94,33 @@ describe('getAttackedByOneQueen', () => {
     const attacked = getAttackedByOneQueen(5, distinctBoard, SIZE);
     expect(attacked.has(5)).toBe(false);
     expect(attacked.has(4)).toBe(true);
+  });
+});
+
+describe('getAttackingQueens', () => {
+  it('finds queens sharing the row or column of the cell', () => {
+    // Queens at (0,0)=0 (same column as target) and (3,1)=7 (same row as target).
+    const attackers = getAttackingQueens(4, withQueens(0, 7), distinctBoard, SIZE);
+    expect(attackers).toEqual(new Set([0, 7]));
+  });
+
+  it('finds a queen on an adjacent diagonal but not a distant one', () => {
+    // Target (1,1)=5. Queen at (0,0)=0 is adjacent diagonal; (3,3)=15 is not.
+    const attackers = getAttackingQueens(5, withQueens(0, 15), distinctBoard, SIZE);
+    expect(attackers).toEqual(new Set([0]));
+  });
+
+  it('finds a queen sharing the cell region even when far away', () => {
+    const board = [...distinctBoard];
+    board[3] = 42; // target cell region
+    board[12] = 42; // queen shares region
+    const attackers = getAttackingQueens(3, withQueens(12), board, SIZE);
+    expect(attackers).toEqual(new Set([12]));
+  });
+
+  it('returns an empty set when no queen attacks the cell', () => {
+    // Target (3,3)=15, queen at (0,0)=0: different row/col, not adjacent, distinct region.
+    expect(getAttackingQueens(15, withQueens(0), distinctBoard, SIZE).size).toBe(0);
   });
 });
 

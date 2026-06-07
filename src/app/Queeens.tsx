@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { I18N, type BlindLevel, type GameMode, type Lang } from '../i18n';
 import { SKINS, type SkinId } from './skins';
 import {
@@ -7,6 +7,7 @@ import {
   QUEEN,
   getAttacked,
   getAttackedByOneQueen,
+  getAttackingQueens,
   getConflicts,
   rotateFlat,
   type CellState,
@@ -50,6 +51,8 @@ export default function Queeens() {
   const [blindLevel, setBlindLevel] = useState<BlindLevel | null>(null);
   const [marksSinceRotation, setMarksSinceRotation] = useState(0);
   const [lastAddTimestamp, setLastAddTimestamp] = useState<number>(Date.now());
+  const [shakingQueens, setShakingQueens] = useState<Set<number>>(new Set());
+  const shakeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const { elapsed, setElapsed, start: startTimer, stop: stopTimer, since } = useTimer();
 
@@ -67,6 +70,7 @@ export default function Queeens() {
       setCells((prev) => rotateFlat(prev, size, direction));
       setLastPlacedQueen(null);
       setMarksSinceRotation(0);
+      setShakingQueens(new Set());
       setLastAddTimestamp(Date.now());
     },
     [size],
@@ -93,6 +97,7 @@ export default function Queeens() {
       setShowWin(false);
       setLastPlacedQueen(null);
       setMarksSinceRotation(0);
+      setShakingQueens(new Set());
       setLastAddTimestamp(Date.now());
       rotation.reset();
       if (mode === 'blind' && blindLevel) blind.begin(getBlindPreviewMs(blindLevel, n));
@@ -217,10 +222,30 @@ export default function Queeens() {
     });
   }, []);
 
+  // Briefly shake the queen(s) responsible for blocking a cell the player
+  // tried to use. Re-clearing first lets a repeated click restart the cue.
+  const flashAttackers = useCallback(
+    (i: number) => {
+      if (!size) return;
+      const attackers = getAttackingQueens(i, cells, board, size);
+      if (attackers.size === 0) return;
+      if (shakeTimer.current) clearTimeout(shakeTimer.current);
+      setShakingQueens(new Set());
+      requestAnimationFrame(() => setShakingQueens(attackers));
+      shakeTimer.current = setTimeout(() => setShakingQueens(new Set()), 650);
+    },
+    [cells, board, size],
+  );
+
+  useEffect(() => () => void (shakeTimer.current && clearTimeout(shakeTimer.current)), []);
+
   const placeQueen = useCallback(
     (i: number) => {
       if (won || blind.active) return;
-      if (cells[i] !== QUEEN && attacked.has(i)) return;
+      if (cells[i] !== QUEEN && attacked.has(i)) {
+        if (mode !== 'blind') flashAttackers(i);
+        return;
+      }
       const placing = cells[i] !== QUEEN;
       setCellAt(i, QUEEN);
       if (placing) {
@@ -229,7 +254,7 @@ export default function Queeens() {
       }
       setLastPlacedQueen(placing ? i : null);
     },
-    [won, blind, cells, attacked, mode, rotation, setCellAt],
+    [won, blind, cells, attacked, mode, rotation, setCellAt, flashAttackers],
   );
 
   const toggleMark = useCallback(
@@ -294,6 +319,7 @@ export default function Queeens() {
           newlyAttacked={newlyAttacked}
           sealedRegions={sealedRegions}
           lastPlacedQueen={lastPlacedQueen}
+          shakingQueens={shakingQueens}
           mode={mode}
           showBlindColors={showBlindColors}
           won={won}

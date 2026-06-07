@@ -12,6 +12,8 @@ export type CellProps = {
   color: string;
   conflict: boolean;
   justPlaced: boolean;
+  /** Briefly highlight this queen as the one blocking a tapped cell. */
+  shake: boolean;
   attacked: boolean;
   sealed: boolean;
   /** Animation delay (s) when the cell was just attacked, or null. */
@@ -35,6 +37,7 @@ export function Cell({
   color,
   conflict,
   justPlaced,
+  shake,
   attacked,
   sealed,
   highlightDelay,
@@ -63,6 +66,7 @@ export function Cell({
     }
     if (conflict) classes.push('conflict');
     if (justPlaced) classes.push('just-placed');
+    if (shake) classes.push('shake');
   } else if (cell === MARK) {
     classes.push('marked');
     content = '✕';

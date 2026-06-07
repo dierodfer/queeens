@@ -15,6 +15,7 @@ type BoardProps = {
   newlyAttacked: Map<number, number>;
   sealedRegions: Set<number>;
   lastPlacedQueen: number | null;
+  shakingQueens: Set<number>;
   mode: GameMode | null;
   showBlindColors: boolean;
   won: boolean;
@@ -48,6 +49,7 @@ export function Board({
   newlyAttacked,
   sealedRegions,
   lastPlacedQueen,
+  shakingQueens,
   mode,
   showBlindColors,
   won,
@@ -82,6 +84,7 @@ export function Board({
             color={showBlindColors ? colors[board[i]] : '#d8dee9'}
             conflict={conflicts.has(i)}
             justPlaced={i === lastPlacedQueen}
+            shake={shakingQueens.has(i)}
             attacked={attacked.has(i) && mode !== 'blind'}
             sealed={mode !== 'blind' && sealedRegions.has(board[i])}
             highlightDelay={newlyAttacked.has(i) ? (newlyAttacked.get(i) || 0) * 0.045 : null}
