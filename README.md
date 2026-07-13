@@ -60,56 +60,16 @@ npm test             # run the unit tests (Vitest)
 
 ```text
 .
-├── .github/workflows/
-│   ├── deploy-test.yml
-│   ├── deploy.yml
-│   └── release-version.yml
-├── index.html
-├── public/
-│   └── version.yml
+├── .github/workflows/   # CI/CD: deploy and release automation
+├── public/               # static assets served as-is
 ├── src/
-│   ├── app/
-│   │   ├── components/        # presentational components
-│   │   │   ├── Board.tsx
-│   │   │   ├── Cell.tsx
-│   │   │   ├── ExitConfirm.tsx
-│   │   │   ├── Menu.tsx
-│   │   │   ├── Ranking.tsx
-│   │   │   ├── TopBar.tsx
-│   │   │   ├── WinPopup.tsx
-│   │   │   └── types.ts
-│   │   ├── hooks/             # stateful behavior
-│   │   │   ├── useBlindPreview.ts
-│   │   │   ├── useTimer.ts
-│   │   │   └── useTwisterRotation.ts
-│   │   ├── constants.ts       # board sizes, colors, animation timing
-│   │   ├── Queeens.css
-│   │   └── Queeens.tsx        # game state orchestration
-│   ├── assets/
-│   │   ├── queeens-image.png
-│   │   ├── queen-danger.svg
-│   │   └── queen-white.svg
-│   ├── data/
-│   │   └── boards.ts
-│   ├── i18n/
-│   │   ├── index.ts
-│   │   └── locales/
-│   │       ├── en.ts
-│   │       └── es.ts
-│   ├── lib/                   # pure game logic + unit tests
-│   │   ├── blind.ts
-│   │   ├── boardPicker.ts
-│   │   ├── format.ts
-│   │   ├── game.ts
-│   │   └── ranking.ts
-│   ├── main.tsx
-│   └── types/
-│       └── i18n.ts
-├── eslint.config.js
-├── .prettierrc.json
-├── tsconfig.json
-├── vite.config.ts
-└── vitest.config.ts
+│   ├── app/               # components, hooks and game orchestration
+│   ├── assets/            # images and icons
+│   ├── data/              # board definitions
+│   ├── i18n/              # translations
+│   ├── lib/                # pure game logic + unit tests
+│   └── main.tsx
+└── ...config files (vite, tsconfig, eslint, prettier, vitest)
 ```
 
 ## Architecture 🧩
