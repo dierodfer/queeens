@@ -29,13 +29,13 @@ Attacked cells are marked and blocked for queen placement, so the board stays re
 
 ## Modos de juego ✨
 
-- Queen progress counter shown as `Queeens: X/N`.
-- Live timer during the run in `mm:ss` format.
-- Local leaderboard per board (top 5), stored in `localStorage`.
-- Three game modes: `Classic`, `Twister`, and `Blind`.
-- Blind difficulty levels: `Easy`, `Medium`, and `Hard`.
-- Bilingual interface: English and Spanish.
-- In-game menu and board restart flow.
+- **Classic** — the standard puzzle: place one queen per region with no two
+  queens sharing a row, column, or short diagonal.
+- **Twister** — same rules as Classic, but the board rotates every time you
+  place a queen, mark 5 X cells, or after 30 seconds of inactivity.
+- **Blind** — memorize the region colors during a preview countdown, then
+  solve the board with the colors hidden. Choose `Easy`, `Medium`, or `Hard`
+  to change how long you get to memorize it.
 
 ## Quick Start 🚀
 
