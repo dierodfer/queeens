@@ -4,9 +4,9 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.9.3-3178C6?logo=typescript&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-8.0.1-646CFF?logo=vite&logoColor=white)
 
-## ▶️ Acceso a la aplicación web
+## ▶️ Play the Web App
 
-[¡Juega ahora en GitHub Pages!](https://dierodfer.github.io/queeens/)
+[Play now on GitHub Pages!](https://dierodfer.github.io/queeens/)
 
 Fast, clean, and a little chaotic.
 Queeens is a logic puzzle game built with React, TypeScript and Vite, where you place one queen per region without conflicts, based on the 8 queens problem.
@@ -27,7 +27,7 @@ Queeens is a logic puzzle game built with React, TypeScript and Vite, where you 
 
 Attacked cells are marked and blocked for queen placement, so the board stays readable while you solve.
 
-## Modos de juego ✨
+## Game Modes ✨
 
 - **Classic** — the standard puzzle: place one queen per region with no two
   queens sharing a row, column, or short diagonal.
