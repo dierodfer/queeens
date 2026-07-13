@@ -4,12 +4,18 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.9.3-3178C6?logo=typescript&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-8.0.1-646CFF?logo=vite&logoColor=white)
 
-## ▶️ Acceso a la aplicación web
+## ▶️ Play the Web App
 
-[¡Juega ahora en GitHub Pages!](https://dierodfer.github.io/queeens/)
+[Play now on GitHub Pages!](https://dierodfer.github.io/queeens/)
 
 Fast, clean, and a little chaotic.
 Queeens is a logic puzzle game built with React, TypeScript and Vite, where you place one queen per region without conflicts, based on the 8 queens problem.
+
+<p>
+  <img src="docs/screenshots/twister-mode.png" alt="Twister mode rules in the menu" width="32%" />
+  <img src="docs/screenshots/twister-rotation.png" alt="Twister mode board mid-rotation" width="32%" />
+  <img src="docs/screenshots/exit-confirm.png" alt="Exit confirmation dialog" width="32%" />
+</p>
 
 ## Game Rules ♟️
 
@@ -21,15 +27,15 @@ Queeens is a logic puzzle game built with React, TypeScript and Vite, where you 
 
 Attacked cells are marked and blocked for queen placement, so the board stays readable while you solve.
 
-## Features ✨
+## Game Modes ✨
 
-- Queen progress counter shown as `Queeens: X/N`.
-- Live timer during the run in `mm:ss` format.
-- Local leaderboard per board (top 5), stored in `localStorage`.
-- Three game modes: `Classic`, `Twister`, and `Blind`.
-- Blind difficulty levels: `Easy`, `Medium`, and `Hard`.
-- Bilingual interface: English and Spanish.
-- In-game menu and board restart flow.
+- **Classic** — the standard puzzle: place one queen per region with no two
+  queens sharing a row, column, or short diagonal.
+- **Twister** — same rules as Classic, but the board rotates every time you
+  place a queen, mark 5 X cells, or after 30 seconds of inactivity.
+- **Blind** — memorize the region colors during a preview countdown, then
+  solve the board with the colors hidden. Choose `Easy`, `Medium`, or `Hard`
+  to change how long you get to memorize it.
 
 ## Quick Start 🚀
 
@@ -48,61 +54,6 @@ npm run typecheck    # TypeScript type checking
 npm run lint         # ESLint
 npm run format       # format with Prettier
 npm test             # run the unit tests (Vitest)
-```
-
-## Project Structure 📁
-
-```text
-.
-├── .github/workflows/
-│   ├── deploy.yml
-│   └── release-version.yml
-├── index.html
-├── public/
-│   └── version.yml
-├── src/
-│   ├── app/
-│   │   ├── components/        # presentational components
-│   │   │   ├── Board.tsx
-│   │   │   ├── Cell.tsx
-│   │   │   ├── ExitConfirm.tsx
-│   │   │   ├── Menu.tsx
-│   │   │   ├── Ranking.tsx
-│   │   │   ├── TopBar.tsx
-│   │   │   ├── WinPopup.tsx
-│   │   │   └── types.ts
-│   │   ├── hooks/             # stateful behavior
-│   │   │   ├── useBlindPreview.ts
-│   │   │   ├── useTimer.ts
-│   │   │   └── useTwisterRotation.ts
-│   │   ├── constants.ts       # board sizes, colors, animation timing
-│   │   ├── Queeens.css
-│   │   └── Queeens.tsx        # game state orchestration
-│   ├── assets/
-│   │   ├── queeens-image.png
-│   │   ├── queen-danger.svg
-│   │   └── queen-white.svg
-│   ├── data/
-│   │   └── boards.ts
-│   ├── i18n/
-│   │   ├── index.ts
-│   │   └── locales/
-│   │       ├── en.ts
-│   │       └── es.ts
-│   ├── lib/                   # pure game logic + unit tests
-│   │   ├── blind.ts
-│   │   ├── boardPicker.ts
-│   │   ├── format.ts
-│   │   ├── game.ts
-│   │   └── ranking.ts
-│   ├── main.tsx
-│   └── types/
-│       └── i18n.ts
-├── eslint.config.js
-├── .prettierrc.json
-├── tsconfig.json
-├── vite.config.ts
-└── vitest.config.ts
 ```
 
 ## Architecture 🧩
