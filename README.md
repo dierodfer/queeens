@@ -27,7 +27,7 @@ Queeens is a logic puzzle game built with React, TypeScript and Vite, where you 
 
 Attacked cells are marked and blocked for queen placement, so the board stays readable while you solve.
 
-## Features ✨
+## Modos de juego ✨
 
 - Queen progress counter shown as `Queeens: X/N`.
 - Live timer during the run in `mm:ss` format.
