@@ -11,6 +11,12 @@
 Fast, clean, and a little chaotic.
 Queeens is a logic puzzle game built with React, TypeScript and Vite, where you place one queen per region without conflicts, based on the 8 queens problem.
 
+<p>
+  <img src="docs/screenshots/twister-mode.png" alt="Twister mode rules in the menu" width="32%" />
+  <img src="docs/screenshots/twister-rotation.png" alt="Twister mode board mid-rotation" width="32%" />
+  <img src="docs/screenshots/exit-confirm.png" alt="Exit confirmation dialog" width="32%" />
+</p>
+
 ## Game Rules ♟️
 
 - Place exactly one queen in each region.
@@ -55,6 +61,7 @@ npm test             # run the unit tests (Vitest)
 ```text
 .
 ├── .github/workflows/
+│   ├── deploy-test.yml
 │   ├── deploy.yml
 │   └── release-version.yml
 ├── index.html
