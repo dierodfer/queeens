@@ -56,22 +56,6 @@ npm run format       # format with Prettier
 npm test             # run the unit tests (Vitest)
 ```
 
-## Project Structure 📁
-
-```text
-.
-├── .github/workflows/   # CI/CD: deploy and release automation
-├── public/               # static assets served as-is
-├── src/
-│   ├── app/               # components, hooks and game orchestration
-│   ├── assets/            # images and icons
-│   ├── data/              # board definitions
-│   ├── i18n/              # translations
-│   ├── lib/                # pure game logic + unit tests
-│   └── main.tsx
-└── ...config files (vite, tsconfig, eslint, prettier, vitest)
-```
-
 ## Architecture 🧩
 
 The code is organized in layers so each piece stays small and focused:
