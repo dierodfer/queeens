@@ -15,7 +15,7 @@ export type SavedSession = {
 
 export const SESSION_KEY = 'queeens-session-v1';
 
-const MODES: GameMode[] = ['classic', 'twister', 'blind'];
+const MODES: ReadonlySet<GameMode> = new Set(['classic', 'twister', 'blind']);
 
 function isValidSession(value: unknown): value is SavedSession {
   if (!value || typeof value !== 'object') return false;
@@ -25,7 +25,7 @@ function isValidSession(value: unknown): value is SavedSession {
   const cellCount = s.size * s.size;
   if (!Array.isArray(s.board) || s.board.length !== cellCount) return false;
   if (!Array.isArray(s.cells) || s.cells.length !== cellCount) return false;
-  if (!MODES.includes(s.mode as GameMode)) return false;
+  if (!MODES.has(s.mode as GameMode)) return false;
   if (typeof s.boardKey !== 'string' || !s.boardKey) return false;
   if (typeof s.boardLabel !== 'string') return false;
   if (typeof s.elapsedMs !== 'number' || s.elapsedMs < 0) return false;
