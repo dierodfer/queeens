@@ -1,4 +1,5 @@
 import { tableros } from '../data/boards';
+import { randomInt } from './random';
 
 export type PickedBoard = { board: number[]; index: number; total: number };
 
@@ -9,7 +10,7 @@ export function pickBoard(n: number): PickedBoard {
   const opts = tableros[n];
   let index: number;
   do {
-    index = (Math.random() * opts.length) | 0;
+    index = randomInt(opts.length);
   } while (opts.length > 1 && index === lastIndex);
   lastIndex = index;
   return { board: opts[index].flat(), index, total: opts.length };

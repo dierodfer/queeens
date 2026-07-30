@@ -10,7 +10,7 @@ import type { Tr } from './types';
 const MODES: GameMode[] = ['classic', 'twister', 'blind'];
 const BLIND_LEVELS: BlindLevel[] = ['easy', 'medium', 'hard'];
 
-type MenuProps = {
+type MenuProps = Readonly<{
   lang: Lang;
   onToggleLang: () => void;
   mode: GameMode | null;
@@ -19,7 +19,7 @@ type MenuProps = {
   onSelectBlindLevel: (level: BlindLevel) => void;
   onStartGame: (n: number) => void;
   tr: Tr;
-};
+}>;
 
 export function Menu({
   lang,
@@ -34,7 +34,7 @@ export function Menu({
   return (
     <div id="menu" className="popup show">
       <div id="lang-switch" aria-label={tr('languageAria')}>
-        <button className="mode-btn active lang-toggle-btn" onClick={onToggleLang}>
+        <button type="button" className="mode-btn active lang-toggle-btn" onClick={onToggleLang}>
           {lang === 'en' ? '🇺🇸 EN' : '🇪🇸 ES'}
         </button>
       </div>
@@ -42,6 +42,7 @@ export function Menu({
       <div id="mode-switch" role="tablist" aria-label={tr('modeAria')}>
         {MODES.map((m) => (
           <button
+            type="button"
             key={m}
             role="tab"
             aria-selected={mode === m}
@@ -72,6 +73,7 @@ export function Menu({
               <div id="blind-level-switch" role="tablist" aria-label={tr('blindDifficultyAria')}>
                 {BLIND_LEVELS.map((level) => (
                   <button
+                    type="button"
                     key={level}
                     role="tab"
                     aria-selected={blindLevel === level}
@@ -88,7 +90,7 @@ export function Menu({
 
           {(mode !== 'blind' || blindLevel) &&
             LEVEL_OPTIONS.map((n) => (
-              <button key={n} className="size-btn" onClick={() => onStartGame(n)}>
+              <button type="button" key={n} className="size-btn" onClick={() => onStartGame(n)}>
                 {n}×{n}
               </button>
             ))}

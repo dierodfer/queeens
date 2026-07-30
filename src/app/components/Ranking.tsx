@@ -2,11 +2,11 @@ import type { RankingEntry } from '../../lib/ranking';
 import { fmt } from '../../lib/format';
 import type { Tr } from './types';
 
-type RankingProps = {
-  entries: RankingEntry[];
+type RankingProps = Readonly<{
+  entries: readonly RankingEntry[];
   boardLabel: string;
   tr: Tr;
-};
+}>;
 
 export function Ranking({ entries, boardLabel, tr }: RankingProps) {
   if (entries.length === 0) return null;
@@ -19,7 +19,10 @@ export function Ranking({ entries, boardLabel, tr }: RankingProps) {
       </p>
       <ol id="ranking-list">
         {entries.map((entry, idx) => (
-          <li key={idx} className={`rank-item${idx === 0 ? ' is-top' : ''}`}>
+          <li
+            key={`${entry.at}-${entry.timeMs}`}
+            className={`rank-item${idx === 0 ? ' is-top' : ''}`}
+          >
             {fmt(entry.timeMs)}
           </li>
         ))}

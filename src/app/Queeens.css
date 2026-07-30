@@ -50,6 +50,16 @@ body {
   --skin-btn-border: rgba(76,96,127,.22);
   --skin-btn-text: #2c3f5f;
   --skin-btn-hover: rgba(255,255,255,.85);
+
+  /* Page layout (kept in this rule so `body` is declared only once). */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: var(--body-bg);
+  font-family: Arial, sans-serif;
+  transition: background .4s ease;
 }
 
 /* ── Safari skin ────────────────────────────────────────────────────── */
@@ -413,17 +423,6 @@ body[data-skin="circus"] {
 }
 
 /* ── Layout ─────────────────────────────────────────────────────────── */
-body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  background: var(--body-bg);
-  font-family: Arial, sans-serif;
-  transition: background .4s ease;
-}
-
 #root {
   display: flex;
   flex-direction: column;
@@ -595,8 +594,13 @@ body {
   transform: translateY(-1px);
 }
 
-/* Cell */
+/* Cell — a native <button>, so the UA button styling is reset here. */
 .cell {
+  appearance: none;
+  -webkit-appearance: none;
+  border: 0;
+  padding: 0;
+  font-family: inherit;
   width: 50px;
   height: 50px;
   display: flex;
@@ -769,9 +773,16 @@ body {
   display: block;
 }
 
-/* Shared popup base */
+/* Shared popup base. Also used by <dialog> elements, whose UA styling
+   (auto margins, fit-content sizing, border, inset-inline) is reset here. */
 .popup {
   position: fixed; top: 50%; left: 50%;
+  right: auto; bottom: auto;
+  width: auto; height: auto;
+  max-width: none; max-height: none;
+  margin: 0;
+  border: 0;
+  color: inherit;
   transform: translate(-50%,-50%);
   background: var(--surface-solid);
   padding: 20px; border-radius: 10px;
