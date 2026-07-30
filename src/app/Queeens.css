@@ -1033,6 +1033,56 @@ body[data-skin="circus"] {
   background: var(--success-dark);
 }
 
+/* Resume confirm popup */
+#resume-confirm {
+  text-align: center;
+}
+
+#resume-confirm h2 {
+  font-size: 22px;
+  margin-bottom: 8px;
+  color: var(--text-accent);
+}
+
+#resume-confirm-board {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-top: 4px;
+}
+
+#resume-confirm-actions {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+#resume-restart,
+#resume-continue-btn {
+  padding: 10px 14px;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+#resume-restart {
+  background: var(--neutral);
+}
+
+#resume-restart:hover {
+  background: var(--neutral-dark);
+}
+
+#resume-continue-btn {
+  background: var(--success);
+}
+
+#resume-continue-btn:hover {
+  background: var(--success-dark);
+}
+
 /* Menu button */
 #menu-btn {
   padding: 10px 20px;
