@@ -19,10 +19,10 @@ export function getConflicts(cells: CellState[], board: number[], size: number):
   const conflicts = new Set<number>();
   for (let a = 0; a < qs.length; a++) {
     const ax = qs[a] % size;
-    const ay = (qs[a] / size) | 0;
+    const ay = Math.trunc(qs[a] / size);
     for (let b = a + 1; b < qs.length; b++) {
       const bx = qs[b] % size;
-      const by = (qs[b] / size) | 0;
+      const by = Math.trunc(qs[b] / size);
       if (
         ax === bx ||
         ay === by ||
@@ -50,7 +50,7 @@ export function getAttacked(cells: CellState[], board: number[], size: number): 
   cells.forEach((s, i) => {
     if (s !== QUEEN) return;
     const x = i % size;
-    const y = (i / size) | 0;
+    const y = Math.trunc(i / size);
     const region = board[i];
     for (let k = 0; k < size; k++) {
       set.add(y * size + k);
@@ -74,7 +74,7 @@ export function getAttacked(cells: CellState[], board: number[], size: number): 
 export function getAttackedByOneQueen(qi: number, board: number[], size: number): Set<number> {
   const set = new Set<number>();
   const qx = qi % size;
-  const qy = (qi / size) | 0;
+  const qy = Math.trunc(qi / size);
   const region = board[qi];
   for (let k = 0; k < size; k++) {
     set.add(qy * size + k);

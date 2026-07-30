@@ -152,11 +152,11 @@ export default function Queeens() {
     const alreadyAttacked = getAttacked(otherCells, board, size);
     const result = new Map<number, number>();
     const qx = lastPlacedQueen % size;
-    const qy = (lastPlacedQueen / size) | 0;
+    const qy = Math.trunc(lastPlacedQueen / size);
     byNew.forEach((ci) => {
       if (!alreadyAttacked.has(ci) && cells[ci] !== QUEEN) {
         const cx = ci % size;
-        const cy = (ci / size) | 0;
+        const cy = Math.trunc(ci / size);
         result.set(ci, Math.max(Math.abs(cx - qx), Math.abs(cy - qy)));
       }
     });
@@ -308,7 +308,7 @@ export default function Queeens() {
 
       {mode === 'blind' && size && !blind.active && (
         <div id="blind-actions">
-          <button id="blind-reveal-btn" onClick={replayBlindPreview}>
+          <button type="button" id="blind-reveal-btn" onClick={replayBlindPreview}>
             {tr('showAgain')}
           </button>
         </div>
@@ -317,12 +317,8 @@ export default function Queeens() {
       <Ranking entries={rankingEntries} boardLabel={boardLabel} tr={tr} />
 
       {overlay && (
-        <div
-          className="overlay show"
-          onClick={() => {
-            // Do not close popups when clicking outside.
-          }}
-        />
+        // A purely visual scrim: popups deliberately do not close on outside clicks.
+        <div className="overlay show" />
       )}
 
       {showMenu && (

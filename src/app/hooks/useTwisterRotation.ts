@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { oppositeDirection, type RotationDirection } from '../../lib/game';
+import { randomUnit } from '../../lib/random';
 import { ROTATION_ANIM_MS, ROTATION_SWAP_MS, TORNADO_BIAS } from '../constants';
 
 export type RotationFx = { direction: RotationDirection; runId: number } | null;
@@ -43,20 +44,20 @@ export function useTwisterRotation({
 
   const trigger = useCallback(() => {
     if (!enabled || rotationFx) return;
-    const direction = Math.random() < TORNADO_BIAS ? favored : oppositeDirection(favored);
+    const direction = randomUnit() < TORNADO_BIAS ? favored : oppositeDirection(favored);
     const runId = ++runRef.current;
     clearTimers();
     setRotationFx({ direction, runId });
     swapRef.current = window.setTimeout(() => onRotate(direction), ROTATION_SWAP_MS);
     endRef.current = window.setTimeout(() => {
-      setRotationFx((current) => (current && current.runId === runId ? null : current));
+      setRotationFx((current) => (current?.runId === runId ? null : current));
     }, ROTATION_ANIM_MS);
   }, [enabled, rotationFx, favored, clearTimers, onRotate]);
 
   const reset = useCallback(() => {
     clearTimers();
     setRotationFx(null);
-    setFavored(Math.random() < 0.5 ? 'right' : 'left');
+    setFavored(randomUnit() < 0.5 ? 'right' : 'left');
   }, [clearTimers]);
 
   // Rotate after 30s without any action.

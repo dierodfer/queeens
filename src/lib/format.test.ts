@@ -34,6 +34,18 @@ describe('parseVersionFromYaml', () => {
   it('falls back to -- when missing', () => {
     expect(parseVersionFromYaml('name: queeens')).toBe('--');
   });
+
+  it('reads the key from a multi-line document', () => {
+    expect(parseVersionFromYaml('name: queeens\n  version : 3.1.0\nother: x\n')).toBe('3.1.0');
+  });
+
+  it('tolerates CRLF line endings and trailing spaces', () => {
+    expect(parseVersionFromYaml('name: queeens\r\nversion: 4.5.6   \r\n')).toBe('4.5.6');
+  });
+
+  it('falls back to -- for an empty value', () => {
+    expect(parseVersionFromYaml('version:')).toBe('--');
+  });
 });
 
 describe('shortHash', () => {

@@ -223,10 +223,10 @@ function mulberry32(seed: number): () => number {
 }
 
 function findQueenPermutation(n: number): number[] {
-  const cols = Array(n).fill(false);
-  const d1 = Array(2 * n).fill(false);
-  const d2 = Array(2 * n).fill(false);
-  const perm = Array(n).fill(-1);
+  const cols = new Array(n).fill(false);
+  const d1 = new Array(2 * n).fill(false);
+  const d2 = new Array(2 * n).fill(false);
+  const perm = new Array(n).fill(-1);
 
   function bt(row: number): boolean {
     if (row === n) return true;
@@ -261,21 +261,28 @@ function neighbors4(x: number, y: number, n: number): Coord[] {
   return out;
 }
 
-function generateContiguousBoard(n: number, seed: number): Board2D {
-  const rand = mulberry32(seed);
-  const queens = getQueenPermutation(n);
-  const board = Array.from({ length: n }, () => Array(n).fill(-1));
-  const frontier: Array<[number, number, number]> = [];
+/** A cell queued for region growth: `[x, y, region]`. */
+type FrontierCell = [number, number, number];
 
-  for (let r = 0; r < n; r++) {
-    const qx = queens[r];
+/** Seeds one region per queen and returns the frontier those regions grow from. */
+function seedQueenRegions(board: Board2D, queens: number[]): FrontierCell[] {
+  const frontier: FrontierCell[] = [];
+  queens.forEach((qx, r) => {
     board[r][qx] = r;
     frontier.push([qx, r, r]);
-  }
+  });
+  return frontier;
+}
 
+/** Grows the seeded regions into free cells; returns how many cells ended up filled. */
+function growRegions(
+  board: Board2D,
+  frontier: FrontierCell[],
+  n: number,
+  rand: () => number,
+): number {
   let filled = n;
-  while (filled < n * n) {
-    if (!frontier.length) break;
+  while (filled < n * n && frontier.length) {
     const i = Math.floor(rand() * frontier.length);
     const [x, y, region] = frontier[i];
     const free = neighbors4(x, y, n).filter(([nx, ny]) => board[ny][nx] === -1);
@@ -290,18 +297,28 @@ function generateContiguousBoard(n: number, seed: number): Board2D {
     frontier.push([nx, ny, region]);
     filled++;
   }
+  return filled;
+}
 
-  if (filled < n * n) {
-    for (let y = 0; y < n; y++) {
-      for (let x = 0; x < n; x++) {
-        if (board[y][x] !== -1) continue;
-        const neigh = neighbors4(x, y, n)
-          .map(([nx, ny]) => board[ny][nx])
-          .filter((v) => v !== -1);
-        board[y][x] = neigh.length ? neigh[Math.floor(rand() * neigh.length)] : 0;
-      }
+/** Assigns any cell the growth pass could not reach to one of its neighbouring regions. */
+function fillUnreachedCells(board: Board2D, n: number, rand: () => number): void {
+  for (let y = 0; y < n; y++) {
+    for (let x = 0; x < n; x++) {
+      if (board[y][x] !== -1) continue;
+      const neigh = neighbors4(x, y, n)
+        .map(([nx, ny]) => board[ny][nx])
+        .filter((v) => v !== -1);
+      board[y][x] = neigh.length ? neigh[Math.floor(rand() * neigh.length)] : 0;
     }
   }
+}
+
+function generateContiguousBoard(n: number, seed: number): Board2D {
+  const rand = mulberry32(seed);
+  const board = Array.from({ length: n }, () => new Array(n).fill(-1));
+  const frontier = seedQueenRegions(board, getQueenPermutation(n));
+
+  if (growRegions(board, frontier, n, rand) < n * n) fillUnreachedCells(board, n, rand);
 
   return board;
 }

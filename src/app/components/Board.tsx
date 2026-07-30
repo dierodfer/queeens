@@ -6,7 +6,7 @@ import { COLORS, ROTATION_ANIM_MS } from '../constants';
 import { Cell } from './Cell';
 import type { Tr } from './types';
 
-type BoardProps = {
+type BoardProps = Readonly<{
   size: number;
   cells: CellState[];
   board: number[];
@@ -24,7 +24,7 @@ type BoardProps = {
   colors?: string[];
   skin?: Skin;
   tr: Tr;
-};
+}>;
 
 function boardClassName(size: number, won: boolean): string {
   if (won) return 'disabled' + (size >= 10 ? ' small-cells' : '');
@@ -37,6 +37,13 @@ function cellPixels(size: number): number {
   if (size >= 14) return 28;
   if (size >= 10) return 36;
   return 50;
+}
+
+/** CSS `animation` shorthand for the twister spin, or undefined when idle. */
+function spinAnimation(rotationFx: RotationFx): string | undefined {
+  if (!rotationFx) return undefined;
+  const keyframes = rotationFx.direction === 'right' ? 'boardSpinRight' : 'boardSpinLeft';
+  return `${keyframes} ${ROTATION_ANIM_MS}ms cubic-bezier(.22,.86,.24,1)`;
 }
 
 export function Board({
@@ -58,24 +65,27 @@ export function Board({
   skin,
   tr,
 }: BoardProps) {
-  const animation = rotationFx
-    ? `boardSpin${rotationFx.direction === 'right' ? 'Right' : 'Left'} ${ROTATION_ANIM_MS}ms cubic-bezier(.22,.86,.24,1)`
-    : undefined;
+  const animation = spinAnimation(rotationFx);
   const patterned = skin?.patterned && skin.regions;
+  // A cell's identity is its board coordinate, which is what the key encodes.
+  const cellEntries = cells.map((cell, index) => ({
+    key: `r${Math.trunc(index / size)}c${index % size}`,
+    index,
+    cell,
+  }));
 
   return (
-    <div
+    <section
       id="board"
-      role="grid"
       aria-label={tr('boardAria')}
       className={boardClassName(size, won)}
       style={{ gridTemplateColumns: `repeat(${size}, ${cellPixels(size)}px)`, animation }}
     >
-      {cells.map((cell, i) => {
+      {cellEntries.map(({ key, index: i, cell }) => {
         const region = patterned ? skin!.regions![board[i]] : undefined;
         return (
           <Cell
-            key={i}
+            key={key}
             index={i}
             size={size}
             cell={cell}
@@ -95,6 +105,6 @@ export function Board({
           />
         );
       })}
-    </div>
+    </section>
   );
 }

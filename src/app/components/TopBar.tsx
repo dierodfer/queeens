@@ -4,7 +4,7 @@ import { fmtClock } from '../../lib/format';
 import { MODE_LABEL_KEYS } from '../constants';
 import type { Tr } from './types';
 
-type TopBarProps = {
+type TopBarProps = Readonly<{
   size: number | null;
   mode: GameMode | null;
   elapsed: number;
@@ -20,7 +20,7 @@ type TopBarProps = {
   skinLabel: string;
   onCycleSkin: () => void;
   tr: Tr;
-};
+}>;
 
 export function TopBar({
   size,
@@ -46,13 +46,13 @@ export function TopBar({
       </header>
 
       <div id="top-controls">
-        <button id="menu-btn" onClick={onMenu}>
+        <button type="button" id="menu-btn" onClick={onMenu}>
           {tr('menu')}
         </button>
-        <button id="shuffle-btn" disabled={!size} onClick={onNewBoard}>
+        <button type="button" id="shuffle-btn" disabled={!size} onClick={onNewBoard}>
           {tr('newBoard')}
         </button>
-        <button id="skin-btn" onClick={onCycleSkin} title={skinLabel}>
+        <button type="button" id="skin-btn" onClick={onCycleSkin} title={skinLabel}>
           {skinEmoji}
         </button>
       </div>
@@ -69,7 +69,7 @@ export function TopBar({
           <p id="blind-preview">
             {tr('memorizeBoard')}: {fmtClock(blindPreviewRemainingMs)}
           </p>
-          <button id="blind-skip" onClick={onSkipBlind}>
+          <button type="button" id="blind-skip" onClick={onSkipBlind}>
             {tr('startNow')}
           </button>
         </div>

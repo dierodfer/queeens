@@ -5,7 +5,7 @@ import type { Tr } from './types';
 /** Print colours for a region, exposed to CSS as --p1 / --p2 custom properties. */
 export type PatternColors = { p1: string; p2?: string };
 
-export type CellProps = {
+export type CellProps = Readonly<{
   index: number;
   size: number;
   cell: CellState;
@@ -26,72 +26,80 @@ export type CellProps = {
   onClick: (i: number) => void;
   onMark: (i: number) => void;
   tr: Tr;
+}>;
+
+/** What a cell renders: its modifier classes, glyph and screen-reader state. */
+type CellVisual = {
+  classes: string[];
+  content: string;
+  contentClass: 'x-mark' | 'animal-mark';
+  state: string;
 };
 
-export function Cell({
-  index,
-  size,
-  cell,
-  color,
-  conflict,
-  justPlaced,
-  attacked,
-  sealed,
-  highlightDelay,
-  interactive,
-  regionClass,
-  patternColors,
-  animal,
-  onClick,
-  onMark,
-  tr,
-}: CellProps) {
-  const classes = ['cell'];
-  if (regionClass) classes.push(regionClass);
-  if (sealed) classes.push('sealed-region');
-  let content = '';
-  let contentClass = 'x-mark';
-  let state = tr('cellEmpty');
+function queenVisual(props: CellProps, classes: string[]): CellVisual {
+  const state = props.tr('cellQueen');
+  classes.push('queen');
+  if (props.conflict) classes.push('conflict');
+  if (props.justPlaced) classes.push('just-placed');
 
-  if (cell === QUEEN) {
-    classes.push('queen');
-    state = tr('cellQueen');
-    if (animal) {
-      classes.push('animal-piece');
-      content = animal;
-      contentClass = 'animal-mark';
-    }
-    if (conflict) classes.push('conflict');
-    if (justPlaced) classes.push('just-placed');
-  } else if (cell === MARK) {
+  if (props.animal) {
+    classes.push('animal-piece');
+    return { classes, content: props.animal, contentClass: 'animal-mark', state };
+  }
+  return { classes, content: '', contentClass: 'x-mark', state };
+}
+
+function describeCell(props: CellProps): CellVisual {
+  const classes = ['cell'];
+  if (props.regionClass) classes.push(props.regionClass);
+  if (props.sealed) classes.push('sealed-region');
+
+  if (props.cell === QUEEN) return queenVisual(props, classes);
+
+  if (props.cell === MARK) {
     classes.push('marked');
-    content = '✕';
-    state = tr('cellMarked');
-  } else if (attacked) {
-    classes.push('attacked');
-    content = '✕';
-    state = tr('cellBlocked');
+    return { classes, content: '✕', contentClass: 'x-mark', state: props.tr('cellMarked') };
   }
 
-  const isXMark = contentClass === 'x-mark';
+  if (props.attacked) {
+    classes.push('attacked');
+    return { classes, content: '✕', contentClass: 'x-mark', state: props.tr('cellBlocked') };
+  }
 
-  const row = ((index / size) | 0) + 1;
+  return { classes, content: '', contentClass: 'x-mark', state: props.tr('cellEmpty') };
+}
+
+export function Cell(props: CellProps) {
+  const {
+    index,
+    size,
+    cell,
+    color,
+    highlightDelay,
+    interactive,
+    patternColors,
+    onClick,
+    onMark,
+    tr,
+  } = props;
+  const { classes, content, contentClass, state } = describeCell(props);
+
+  const row = Math.trunc(index / size) + 1;
   const col = (index % size) + 1;
+  const highlighted = contentClass === 'x-mark' && highlightDelay !== null;
 
-  const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      onClick(index);
-    } else if (e.key === 'x' || e.key === 'X') {
+  // Enter/Space already activate a <button>; only the mark shortcut needs handling.
+  const handleKeyDown = (e: KeyboardEvent<HTMLButtonElement>) => {
+    if (e.key === 'x' || e.key === 'X') {
       e.preventDefault();
       onMark(index);
     }
   };
 
   return (
-    <div
+    <button
+      type="button"
       className={classes.join(' ')}
-      role="gridcell"
       aria-label={`${tr('cellRow')} ${row}, ${tr('cellCol')} ${col}: ${state}`}
       aria-pressed={cell === QUEEN}
       tabIndex={interactive ? 0 : -1}
@@ -105,7 +113,7 @@ export function Cell({
         } as CSSProperties
       }
       onClick={() => onClick(index)}
-      onContextMenu={(e: MouseEvent<HTMLDivElement>) => {
+      onContextMenu={(e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         onMark(index);
       }}
@@ -113,16 +121,12 @@ export function Cell({
     >
       {content && (
         <span
-          className={`${contentClass}${isXMark && highlightDelay !== null ? ' x-new' : ''}`}
-          style={
-            isXMark && highlightDelay !== null
-              ? { animationDelay: `${highlightDelay}s` }
-              : undefined
-          }
+          className={`${contentClass}${highlighted ? ' x-new' : ''}`}
+          style={highlighted ? { animationDelay: `${highlightDelay}s` } : undefined}
         >
           {content}
         </span>
       )}
-    </div>
+    </button>
   );
 }
