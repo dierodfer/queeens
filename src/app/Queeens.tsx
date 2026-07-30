@@ -21,6 +21,7 @@ import {
 } from '../lib/ranking';
 import { getBlindPreviewMs, getBlindReplayMs } from '../lib/blind';
 import { pickBoard } from '../lib/boardPicker';
+import { clearSession, loadSession, saveSession } from '../lib/session';
 import { useTimer } from './hooks/useTimer';
 import { useBlindPreview } from './hooks/useBlindPreview';
 import { useTwisterRotation } from './hooks/useTwisterRotation';
@@ -28,30 +29,47 @@ import { Board } from './components/Board';
 import { ExitConfirm } from './components/ExitConfirm';
 import { Menu } from './components/Menu';
 import { Ranking } from './components/Ranking';
+import { ResumeConfirm } from './components/ResumeConfirm';
 import { TopBar } from './components/TopBar';
 import { WinPopup } from './components/WinPopup';
 
 export default function Queeens() {
+  // Read once, at mount: if a round was in progress when the page was last
+  // closed/reloaded, restore it (behind a resume/restart prompt) instead of
+  // starting on the menu.
+  const [initialSession] = useState(() => loadSession());
+
   const [skinId, setSkinId] = useState<SkinId>('default');
   const [lang, setLang] = useState<Lang>('en');
-  const [size, setSize] = useState<number | null>(null);
-  const [board, setBoard] = useState<number[]>([]);
-  const [cells, setCells] = useState<CellState[]>([]);
+  const [size, setSize] = useState<number | null>(initialSession?.size ?? null);
+  const [board, setBoard] = useState<number[]>(initialSession?.board ?? []);
+  const [cells, setCells] = useState<CellState[]>(initialSession?.cells ?? []);
   const [won, setWon] = useState(false);
-  const [showMenu, setShowMenu] = useState(true);
+  const [showMenu, setShowMenu] = useState(!initialSession);
   const [showWin, setShowWin] = useState(false);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
-  const [boardKey, setBoardKey] = useState('');
-  const [boardLabel, setBoardLabel] = useState('');
-  const [boardOrdinal, setBoardOrdinal] = useState<{ index: number; total: number } | null>(null);
+  const [showResume, setShowResume] = useState(!!initialSession);
+  const [boardKey, setBoardKey] = useState(initialSession?.boardKey ?? '');
+  const [boardLabel, setBoardLabel] = useState(initialSession?.boardLabel ?? '');
+  const [boardOrdinal, setBoardOrdinal] = useState<{ index: number; total: number } | null>(
+    initialSession?.boardOrdinal ?? null,
+  );
   const [version, setVersion] = useState('--');
   const [lastPlacedQueen, setLastPlacedQueen] = useState<number | null>(null);
-  const [mode, setMode] = useState<GameMode | null>('classic');
-  const [blindLevel, setBlindLevel] = useState<BlindLevel | null>(null);
+  const [mode, setMode] = useState<GameMode | null>(initialSession?.mode ?? 'classic');
+  const [blindLevel, setBlindLevel] = useState<BlindLevel | null>(
+    initialSession?.blindLevel ?? null,
+  );
   const [marksSinceRotation, setMarksSinceRotation] = useState(0);
   const [lastAddTimestamp, setLastAddTimestamp] = useState<number>(Date.now());
 
-  const { elapsed, setElapsed, start: startTimer, stop: stopTimer, since } = useTimer();
+  const {
+    elapsed,
+    setElapsed,
+    start: startTimer,
+    stop: stopTimer,
+    since,
+  } = useTimer(initialSession?.elapsedMs ?? 0);
 
   const clearQueens = useCallback(() => {
     setCells((prev) => prev.map((cell) => (cell === QUEEN ? EMPTY : cell)) as CellState[]);
@@ -73,7 +91,7 @@ export default function Queeens() {
   );
   const rotation = useTwisterRotation({
     enabled: mode === 'twister' && size != null,
-    paused: won || showMenu || showWin,
+    paused: won || showMenu || showWin || showResume,
     lastAddTimestamp,
     marksSinceRotation,
     onRotate: handleRotate,
@@ -131,9 +149,49 @@ export default function Queeens() {
       const el = since();
       setElapsed(el);
       saveRankingStore(addRankingEntry(loadRankingStore(), boardKey, el, Date.now()));
+      clearSession();
       setShowWin(true);
     }
   }, [cells, size, board, won, boardKey, stopTimer, since, setElapsed]);
+
+  // Autosave the in-progress round so it can be offered for resume after a
+  // reload. Also saves on pagehide/beforeunload for the freshest elapsed time.
+  useEffect(() => {
+    if (!size || !mode || !boardOrdinal || won || showMenu || showResume) return;
+    const persist = () => {
+      saveSession({
+        size,
+        board,
+        cells,
+        mode,
+        blindLevel,
+        boardKey,
+        boardLabel,
+        boardOrdinal,
+        elapsedMs: since(),
+      });
+    };
+    persist();
+    window.addEventListener('pagehide', persist);
+    window.addEventListener('beforeunload', persist);
+    return () => {
+      window.removeEventListener('pagehide', persist);
+      window.removeEventListener('beforeunload', persist);
+    };
+  }, [
+    size,
+    mode,
+    boardOrdinal,
+    won,
+    showMenu,
+    showResume,
+    board,
+    cells,
+    blindLevel,
+    boardKey,
+    boardLabel,
+    since,
+  ]);
 
   const conflicts = useMemo(
     () => (size ? getConflicts(cells, board, size) : new Set<number>()),
@@ -188,8 +246,10 @@ export default function Queeens() {
     stopTimer();
     blind.stop();
     rotation.reset();
+    clearSession();
     setShowWin(false);
     setShowExitConfirm(false);
+    setShowResume(false);
     setWon(false);
     setSize(null);
     setBoard([]);
@@ -204,6 +264,11 @@ export default function Queeens() {
     if (size) setShowExitConfirm(true);
     else resetToMenu();
   }, [size, resetToMenu]);
+
+  const resumeSession = useCallback(() => {
+    setShowResume(false);
+    startTimer(elapsed);
+  }, [startTimer, elapsed]);
 
   const replayBlindPreview = useCallback(() => {
     if (mode === 'blind' && blindLevel && size) blind.begin(getBlindReplayMs(blindLevel), true);
@@ -259,7 +324,7 @@ export default function Queeens() {
     });
   }, []);
 
-  const overlay = showMenu || showWin || showExitConfirm;
+  const overlay = showMenu || showWin || showExitConfirm || showResume;
   const showBlindColors = mode !== 'blind' || blind.active;
   const locale = I18N[lang];
   const tr = useCallback((key: string): string => locale[key] ?? key, [locale]);
@@ -345,6 +410,15 @@ export default function Queeens() {
 
       {showExitConfirm && (
         <ExitConfirm onCancel={() => setShowExitConfirm(false)} onConfirm={resetToMenu} tr={tr} />
+      )}
+
+      {showResume && (
+        <ResumeConfirm
+          boardLabel={boardLabel}
+          onResume={resumeSession}
+          onRestart={resetToMenu}
+          tr={tr}
+        />
       )}
     </>
   );
