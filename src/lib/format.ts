@@ -15,20 +15,34 @@ export const fmtClock = (ms: number): string => {
   return `${m}:${s}`;
 };
 
-/**
- * Matches the `version` key of a small YAML document. Horizontal whitespace is
- * spelled out as `[ \t]` (rather than `\s`) so the pattern cannot overlap the
- * `.*` capture, which would make it backtrack super-linearly.
- */
-const VERSION_LINE = /^[ \t]*version[ \t]*:[ \t]*(.*)$/m;
+/** Strips one layer of matching leading/trailing quotes, if present. */
+function unquote(raw: string): string {
+  const first = raw[0];
+  const last = raw[raw.length - 1];
+  if (raw.length >= 2 && (first === "'" || first === '"') && first === last) {
+    return raw.slice(1, -1);
+  }
+  return raw;
+}
 
-/** Extracts the `version` field from a small YAML document. */
+/**
+ * Extracts the `version` field from a small YAML document.
+ *
+ * Parsed line-by-line instead of with a single regex: a pattern combining
+ * several unbounded quantifiers (leading whitespace, trailing whitespace,
+ * value) is flagged by static analysis as a potential ReDoS even when the
+ * quantifiers can't actually overlap, so this avoids the pattern entirely.
+ */
 export function parseVersionFromYaml(content: string): string {
-  const match = VERSION_LINE.exec(content);
-  if (!match) return '--';
-  const raw = match[1].trim();
-  const unquoted = raw.replace(/^['"]|['"]$/g, '');
-  return unquoted || '--';
+  for (const line of content.split(/\r\n|\r|\n/)) {
+    const trimmed = line.trim();
+    if (!trimmed.startsWith('version')) continue;
+    const rest = trimmed.slice('version'.length).trimStart();
+    if (!rest.startsWith(':')) continue;
+    const raw = unquote(rest.slice(1).trim());
+    return raw || '--';
+  }
+  return '--';
 }
 
 /** Deterministic short (6 hex char) FNV-1a hash, used to label boards. */
